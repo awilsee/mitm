@@ -1,0 +1,212 @@
+\documentclass{scrartcl}
+\usepackage{includes/mypack}
+\usepackage{animate}
+\usepackage{courier}
+\usepackage{listings}
+\usepackage[utf8]{inputenc}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\lstset{ %
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
+  basicstyle=\footnotesize\ttfamily,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  %deletekeywords={...},            % if you want to delete keywords from the given language
+  %escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  %frame=single,	                   % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  language=python,                 % the language of the code
+  %morekeywords={*,...},            % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=4,	                   % sets default tabsize to 2 spaces
+  %title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+
+\Autoren{Attenberger, Bollenmiller, Schuster, Wilhelm}
+\VersuchLang{Mobile Netze - Man-In-The-Middle} %z.B. Ein Wichtiger Versuch
+\VersuchKurz{MobileNetze} %z.B. EWF
+\Fach{Mobile Netze} %z.B. Physik
+\Studiengruppe{IG}
+\Semester{SS17}
+\Betreuer{Prof. Dr. Wischhof}
+\Datum{\today} %falls gewünscht auf Versuchsdatum ändern, z.B. 21. November 2012
+
+\PDFStartpage{1} %Seite die im Reader beim Start geöffnet wird
+\MyParLineSkip{0.5} %Höhe der Absätze die durch \mypar erzeugt werden: 0...1
+
+\praeinit %Initialisierung der Styles Teil 1
+
+%umschalter zwischen WORKMODE und FINALMODE
+%im Workmode gibts kein titelblatt und kein inhaltsverzeichnis,
+%sodass man sich auf die arbeit an sich konzentrieren kann,
+%und das setzen schneller geht. 
+%wichtig: immer mindestens dreimal setzen lassen,
+%wenn auf final umgeschaltet wird, 
+%damit Veweise und Inhaltsverzeichnis stimmen!!!!
+\setboolean{finalmode}{true}
+
+%Umschalter zwischen draft und normal mode
+%bewirkt, dass falls eingeschaltet, alle grafiken durch rahmen
+%der entsprechenden größe ersetzt und dargestellt werden.
+%erhöht die performance beim setzen deutlich und verhindert ablenkung 
+%beim arbeiten durch bilder.
+\setboolean{draftgraphics}{false}
+
+\begin{document}
+\postinit %Initialisierung der Styles Teil 2
+%%AB HIER GEHT DIE ARBEIT LOS!
+
+\input{01grundlagen.tex}
+
+
+
+
+%%HIER ENDET DIE ARBEIT! DER REST IST KOMMENTAR MIT EIN PAAR PRAKTISCHEN FORMATIERUNGEN!!
+\end{document}
+
+
+
+%%%%%EINIGE SEHR PRAKTISCHE FORMATIERUNGSBEFEHLE UM ALLES SCHÖN UND EINHEITLICH AUSSEHEN ZU LASSEN!!%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%COMMENT%%%%%%%%%%%%%%%%%%%%%%COMMENT%%%%%%%%%%%%%%%%%%%%%%COMMENT%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{comment}
+
+% FORMELN UND PARAMETERBESCHREIBUNGEN
+\begin{align}
+\Delta \varphi = 360^\circ \cdot \frac{\Delta t}{T} = 360^\circ \cdot \Delta t \cdot f
+\end{align}
+wobei:
+\begin{conditions} % *sternchen für zeilenübergreifende beschreibungstexte!!!
+\Delta \varphi	& Phasenverschiebung \\
+\Delta t		& Zeitdifferenz zwischen Eingangsspannung und gedämpfter Ausgangsspannung\\
+T				& Periodendauer der Eingangsspannung \\
+f				& Frequenz der Eingangsspannung
+\end{conditions}
+
+% Aufrechte griechische Buchstaben für Einheiten
+\upmu
+\upalpha
+...etc
+
+% BILDER EINFÜGEN
+\begin{figure}[h] %t=top b=bottom h=here p =eigene page
+\centering
+\includegraphics[width=15cm]{media/hohlleiter}
+\caption{Versuchsaufbau Hohlleiter}
+\label{fig:label}
+\end{figure}
+
+% MEHRERE BILDER NEBENEINANDER
+\begin{figure}[h] %t=top b=bottom h=here p =eigene page 
+\flushright
+\subfloat[Dispersionsrelation]{\includegraphics[width=7cm]{media/dispers}}
+\subfloat[Phasen- und Gruppengeschwindigkeit]{\includegraphics[width=7cm]{media/phasgrupp}}
+\end{figure}
+
+%BILDER VOM TEXT UMFLOSSEN
+\begin{wrapfigure}[10]{r}{8cm}
+\centering
+\includegraphics[width=7cm]{media/bragg}
+\caption{\textsl{Aufbau eines Bragg-Spektrometers}}
+\label{fig:bragg}
+\end{wrapfigure}
+
+%TABELLEN
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|}
+\hline
+$z$ [mm] & $\Delta z$ [mm]\\
+\hline
+3,3 & 0 \\
+4,9 & 1,6 \\
+6,5 & 1,6 \\
+8,0 & 1,5 \\
+\hline
+\end{tabular}
+\caption{Position der Minima zueinander und jeweiliger gemessener Abstand}
+\label{tab:label}
+\end{table}
+
+% VERBUNDENE ZELLEN IN TABELLEN
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|c|p{1cm}p{1cm}p{1cm}p{1cm}p{1cm}p{1cm}p{1cm}|}
+\hline
+A & B & C & D & \multicolumn{7}{|c|}{F}  \\ \hline
+\multirow{ 2}{*}{1} & 0 & 6 & 230 & 35 & 40 & 55 & 25 & 40 & 35 & \\
+& 1 & 5 & 195 & 25 & 50 & 35 & 40 & 45 &  &  \\ \hline
+\end{tabular}
+\caption{A test caption}
+\label{tab:table2}
+\end{table}
+
+% MEHRERE TABELLEN NEBENEINANDER
+\begin{table}[h]
+\centering
+
+\subfloat[PVC, $d=15,0\,$mm]{
+\begin{tabular}[b]{|c|c|c|}
+\hline
+mit Platte & ohne Platte & $\Delta s$\\
+\hline
+3,6 & 4,85 & 1,25\\
+3,55 & 4,8 & 1,25\\
+3,5 & 4,75 & 1,25\\
+3,55 & 4,85 & 1,3\\
+\hline
+\end{tabular}
+}
+
+\subfloat[PE, $d=12,2\,$mm]{
+\begin{tabular}[b]{|c|c|c|}
+\hline
+mit Platte & ohne Platte & $\Delta s$\\
+\hline
+3,5 & 4,2 & 0,7\\
+3,5 & 4,25 & 0,75\\
+3,5 & 4,2 & 0,7\\
+\hline
+\end{tabular}
+}
+
+\caption{Materialproben und zugehörige Messwerte in [cm]}
+\end{table}
+
+% FLOATS ERZWINGEN = TABELLEN UND BILDER ZWINGEND EINFÜGEN
+\FloatBarrier
+
+% ABSÄTZE MIT EINSTELLBARER UND NACHTRÄGLICH GLOBAL ÄNDERBARER DISTANZ
+\mypar
+
+% PDFs ANHÄNGEN
+\includepdf[pages=-]{media/protokoll}
+
+%BILDER UND TABELLEN REFERENZIEREN
+\ref{labelname}
+\pageref{labelname}
+
+%REFERENZIERUNGSREGELN ZUR ÜBERSICHTLICHKEIT
+bilder: fig:label
+tabellen: tab:label
+gleichungen: eq:label
+
+\end{comment}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%COMMENT%%%%%%%%%%%%%%%%%%%%%%COMMENT%%%%%%%%%%%%%%%%%%%%%%COMMENT%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

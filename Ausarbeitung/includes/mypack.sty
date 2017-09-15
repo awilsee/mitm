@@ -1,0 +1,152 @@
+%============================ mypackvt.sty ==================================%
+%==========================AUTHOR: Roman Bendt=============================%
+%=========================BASED ON: Stefan Kuhn============================%
+%
+\ProvidesPackage{includes/mypack}[2014/04/05 v8 My Packages]%
+%
+%
+%
+%
+%================================THINGS IT LOADS==================================%
+%
+\RequirePackage[ngerman]{babel}% 		 deutsche ?berschrift und trennung
+\RequirePackage[utf8]{inputenc}%		 umlaute
+%\RequirePackage[T1]{fontenc}%
+\RequirePackage{pdfpages}%			zum anhang uä einbinden
+\RequirePackage{amsmath,amstext}%
+\RequirePackage{wrapfig}%
+\RequirePackage{graphicx}%			grafiken einbinden, jpeg oder ps, eps
+\RequirePackage{geometry}%			für seitenränder und fusszeilenabstand
+\RequirePackage{fancyhdr}%
+\RequirePackage[colorlinks=false, pdfborder={0 0 0}, bookmarksopen=true]{hyperref}%			klickbares inhaltsverzeichniss und links, muss als letztes geladen werden!
+\RequirePackage{blindtext}%
+\RequirePackage{subfig}%
+\RequirePackage{upgreek}%
+\RequirePackage{array}%					%für die formel parameter beschreibungs umgebung
+\RequirePackage{tabularx}%				% -"-
+\RequirePackage{placeins} %einfach nur um float zu zwingen eingesetzt zu werden. mit \FloatBarrier
+\RequirePackage{multirow} %um tabellenspalten und reihen zusammenfügen zu können
+\RequirePackage{verbatim}% für multiline comment
+\RequirePackage{scrtime}% für \thistime = aktuelle builduhrzeit
+\RequirePackage{mathptmx} % Times New Roman als Schriftart
+\RequirePackage{sectsty} %überschriftenschriftart ändern
+\RequirePackage{ifthen}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%WIRD FÜR MAINTENANCEMODE GEBRAUCHT
+%
+%=============================THINGS IT PROVIDES======================================%
+%
+\providecommand{\praeinit}
+{
+	\hypersetup
+	{
+		pdfsubject		=			{\TVersuchLang},
+		pdftitle		=			{\TFach},
+		pdfauthor		=			{\TAutor},
+		pdfstartview		=			{FitV},
+		pdfview   		=			{FitH},
+		pdfpagelayout	=			{OneColumn},
+		pdfstartpage = {\StartpagePDF}
+	}
+	\allsectionsfont{\rmfamily\raggedright}%
+	\newboolean{finalmode}%
+	\setboolean{finalmode}{true}%
+	\newboolean{draftgraphics}%
+	\setboolean{draftgraphics}{false}%
+	\newenvironment{conditions}%
+	  {\par\vspace{\abovedisplayskip}\noindent\begin{tabular}{>{$}l<{$} @{${}={}$} l}}%
+	  {\end{tabular}\par\vspace{\belowdisplayskip}}%
+	\newenvironment{conditions*}%
+	  {\par\vspace{\abovedisplayskip}\noindent%
+	   \tabularx{\columnwidth}{>{$}l<{$} @{${}={}$} >{\raggedright\arraybackslash}X}}%
+	  {\endtabularx\par\vspace{\belowdisplayskip}}%
+	\newcommand{\mypar}{\vspace{\TMyParLineSkip\baselineskip}}%
+}
+%
+\providecommand{\postinit}%
+{
+	\ifthenelse{\boolean{finalmode}}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%IF FINAL 
+	{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%THEN ANFANG
+	\makehmtitle%
+	%\hrulefill%										gibt linie
+	\thispagestyle{fancy}%								keine seitennummerierung
+	\fancyhf{}%
+	\fancyhead[R]{\TAutor}%
+	\fancyfoot[R]{\TDatum}%
+	\fancyfoot[L]{\TVersuchKurz}%
+	\tableofcontents%									inhaltsverzeichnis
+	\vfill%											linie nach unten schieben
+	\hrulefill%										gibt linie
+	\newpage%
+	}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%THEN ENDE
+	{}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%ELSE
+	\setlength{\headheight}{26pt}	
+	\setcounter{secnumdepth}{4}%							unterpunktnumerierungstiefe
+	\setcounter{tocdepth}{4}%							inhaltsverzeichnistiefe
+	\setcounter{page}{1}%								seitennumerierung auf 1
+	%\pagestyle{headings}%								überschrift auf allen seiten und seitenzahl
+	\pagestyle{fancy}%
+%
+	%\setlength{\headsep}{0mm}%
+	%\setlength{\headheight}{53pt}%
+	\fancyhf{}%
+	\fancyhead[R]{\TAutor}%
+	\fancyfoot[R]{\TDatum}%
+	\fancyfoot[C]{\thepage}%
+	\fancyfoot[L]{\TVersuchKurz}%
+	\ifthenelse{\boolean{finalmode}}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% IF FINAL
+ 	{}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%THEN
+	{%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%IF NOT FINAL (ELSE) ANFANG
+	\fancyhead[L]{WORKMODE \ - \ \today; \ \thistime Uhr}
+	\fancyfoot[R]{(\TDatum) \today \\ \thistime Uhr}
+	}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%IF NOT FINAL (ELSE)ENDE
+%
+    \ifthenelse{\boolean{draftgraphics}}{\setkeys{Gin}{draft}}{}
+	\renewcommand{\headrulewidth}{0pt}%
+}
+%
+%
+%
+\providecommand{\Fach}[1]{\newcommand{\TFach}{#1}}%					Speichern des Faches (z.B.: Physik IV - Praktikum)
+\providecommand{\VersuchLang}[1]{\newcommand{\TVersuchLang}{#1}}%		Speichern des Versuches Ausgeschrieben (z.B.: Reflexionen auf Kabeln)
+\providecommand{\VersuchKurz}[1]{\newcommand{\TVersuchKurz}{#1}}%		Speichern des Versuches Abk?rzung (z.B.: RFX)
+\providecommand{\Autoren}[1]{\newcommand{\TAutor}{#1}}%					Speichern der Autoren (z.B.: Stefan Kuhn)
+\providecommand{\Studiengruppe}[1]{\newcommand{\TKurs}{#1}}%					Speichern des Kurses (z.B.: PHB4)
+\providecommand{\Semester}[1]{\newcommand{\TSemester}{#1}}%				Speichern des Semesters (z.B.: SS11)
+\providecommand{\Datum}[1]{\newcommand{\TDatum}{#1}}%					Speichern des Datums (z.B.: 19. Juni 2011)
+\providecommand{\Betreuer}[1]{\newcommand{\TBetreuer}{#1}}%				Speichern des Betreues (z.B.: Prof. Dr. Mustermann)
+\providecommand{\PDFStartpage}[1]{\newcommand{\StartpagePDF}{#1}}%				PDF startpage dynamisch festlegen, wenn man an bestimmten absätzen arbeitet%
+\providecommand{\MyParLineSkip}[1]{\newcommand{\TMyParLineSkip}{#1}}% 			Speichert 0...1 als \mypar baselineskip bruchteil für einstellbare absätze
+%
+\providecommand{\makehmtitle}{%
+  \begin{titlepage}%
+    \begin{center}%
+      \begin{minipage}[b]{65mm}%
+       Fakultät 07 und 08\\ Master Informatik und Geomatik\\%
+      \end{minipage}%
+      \hfill%
+      \includegraphics[height=30mm]{includes/hmlogo}\\%
+      \vspace{40mm}%
+	{\huge \textbf{\TFach}\\}%
+	{\Large \TVersuchLang \\}%
+      \vspace{70mm}%
+	Ausarbeitung\\%
+	von\\%
+	\TAutor \\%
+	\TSemester \ \TKurs	\\%
+	\TDatum\\\vspace{1cm}%
+	\textit{}
+    \end{center}%
+    \vspace{35mm}%
+	Betreut von \TBetreuer%
+  \end{titlepage}%
+}%
+%
+%
+%
+%
+%===========================THINGS IT DOES=========================================%
+%============================pagelayout===========================================%
+%
+\setlength{\parindent}{0pt}%														keine einr?ckung bei abs?tzen, nach formeln und bildern
+\geometry{a4paper, top=25mm, left=30mm, right=30mm, bottom=25mm, headsep=10mm, footskip=10mm}%
+%
+%================================LA FIN========================================%      
