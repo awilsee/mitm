@@ -959,3 +959,51 @@ Abgebrochen (Speicherabzug geschrieben)
 //Kommentar im rxgain der Datenbank "Receiver gain setting in dB.  Ideal value is dictated by the hardware; 47 dB for RAD1 and 0-10 dB for Ettus hardware.  This database parameter is static but the receiver gain can be modified in real time with the CLI "rxgain" command."
 -> bei rxGain 10 startet OpenBTS und kommt kein ALERT mehr
    -> nur temporär
+
+
+///Konfig
+asterisk konfiguriert wie in Anleitung von 2014
+-> Achtung Pfade teils anders:
+/home/mitm/dev/asterisk/asterisk-11.7.0/main
+/home/mitm/dev/subscriberRegistry/apps
+
+  462  sudo apt-get install libsqliteodbc unixodbc
+  463  sudo nano /etc/odbcinst.ini
+  464  sudo nano /etc/odbc.ini
+  465  sudo nano /etc/asterisk/modules.conf 
+  466  sudo nano /etc/asterisk/extconfig.conf  -> keine Änderung
+  467  sudo nano /etc/asterisk/res_odbc.conf   -> keine Änderung
+  468  sudo nano /etc/asterisk/func_odbc.conf  -> keine Änderung
+//sip.conf und extensions.conf haben gespasst
+ 490  sudo ./asterisk -r
+		CLI-> core restart gracefully
+
+  495  sudo sysctl -w net.ipv4.ip_forward=1
+  496  echo 'net.ipv4.ip_forward=1' >> /etc/sysctl.conf
+  514  sudo iptables -t nat -A POSTROUTING -o enp1s0 -j MASQUERADE
+  515  sudo iptables-save > /etc/iptables/rules.v4
+
+
+
+
+//beim starten des Systems Asterisk-Anwendungen im Hintergrund starten.
+
+
+//weitere Konfiguration vonn OpenBTS (-> damit auch kein clipping und Absturz mehr):
+"GSM.Radio.C0"	"806"	"1"	"0"	"The C0 ARFCN.  Also the base ARFCN for a multi-ARFCN configuration.  Static."
+
+"GSM.Radio.RxGain"	"8"	"0"	"1"	"Receiver gain setting in dB.  Ideal value is dictated by the hardware; 47 dB for RAD1 and 0-10 dB for Ettus hardware.  This database parameter is static but the receiver gain can be modified in real time with the CLI "rxgain" command."
+
+"GSM.Radio.Band"	"1900"	"0"	"1"	"The GSM operating band.  Valid values are 850 for GSM850, 900 for PGSM900, 1800 for DCS1800 and 1900 for PCS1900.  For non-multiband units, this value is dictated by the hardware and should not be changed."
+
+
+//um alle SIM-Karten zur Registrierung zu erlauben:
+"Control.LUR.OpenRegistration"	".*"	"0"	"1"	"This value is a regular expression.  Any handset with an IMSI matching the regular expression is allowed to register, even if it is not provisioned.  By default, this feature is disabled.  To enable open registration, specify a regular expression to match.  E.g. ^001, which matches any IMSI starting with 001, the MCC for test networks.  To disable open registration again, execute "unconfig Control.LUR.OpenRegistration"."
+
+//->Kennung 001 -> Testnetze
+"GSM.Identity.MCC"	"001"	"0"	"0"	"Mobile country code; must be three digits.  Defined in ITU-T E.212. Value of 001 for test networks."
+
+//->Kennung 99 -> Netz Swisscom Broadcast
+"GSM.Identity.MNC"	"99"	"0"	"1"	"Mobile network code, two or three digits.  Assigned by your national regulator.  01 for test networks."
+
+
