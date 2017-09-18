@@ -1,0 +1,16 @@
+
+    2  sudo autoconf -i
+    7  sudo ./autogen.sh 
+   11  sudo apt-get install libdbd-sqlite3 libdbi0-dev libtool automake git-core pkg-config libortp-dev
+
+   15  sudo apt-get install sqlite
+   17  sudo apt-get install sqlite-autoconfg
+   18  sudo apt-get install sqlite-autoconf
+   19  sudo apt-get install libsqlite3-dev libsqlite3-tcl
+   20  sudo ./configure
+   22  sudo make -j4
+   23  sudo make install
+
+   24  osmo-trx 
+   25  osmo-trx -h
+
