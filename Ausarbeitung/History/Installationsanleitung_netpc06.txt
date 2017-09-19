@@ -1,0 +1,212 @@
+// Git installieren
+    3  sudo apt install git git-core
+    4  git clone git://git.osmocom.org/libosmo-abis.git
+
+
+// Notwendige Abhängigkeiten installieren
+   17  sudo apt-get install libpcsclite-dev libtalloc-dev libortp-dev libsctp-dev 
+libmnl-dev libdbi-dev libdbd-sqlite3 libsqlite3-dev sqlite3 libc-ares-dev 
+libdbi0-dev libdbd-sqlite3 build-essentials libtool autoconf automake pkg-config 
+libsqlite3-tcl sqlite-autoconf sqlite-autoconfg
+
+
+// Python Paket: bumpvision; nötig für alle weiteren Pakete; erzeugt trotz 
+// Funktion dennoch Fehler
+   10  sudo apt-get install python-pip
+   11  pip install --upgrade bumpversion
+   59  pip uninstall bumpversion
+   60  pip install bumpversion==0.3.2
+
+
+// Bibliotheken für Abis-Interface installieren
+    6  cd libosmo-abis
+   28  autoreconf -fi
+   29  ./configure
+   30  sudo make -j8
+
+
+// 
+   26  git clone git://git.osmocom.org/libosmocore.git
+   27  cd libosmocore/
+   28  autoreconf -fi
+   29  ./configure
+   30  sudo make -j8
+
+
+// PATH-Variable setzen; ggf. nicht nötig
+   33  cd /etc
+   38  sudo gedit environment
+
+
+// Installation osmoTRX
+// Netzwerkschnittstelle hierfür aktivieren
+   40  ifconfig
+   41  sudo ifconfig enp0s25 192.168.10.3	// IP Rechner
+   42  ping 192.168.10.2			// IP der BTS
+// OsmoTRX
+   44  git clone git://git.osmocom.org/osmo-trx
+   45  sudo apt-get install --no-install-recommends libusb-1.0-0-dev libboost-dev
+   46  sudo apt-get install libuhd-dev uhd-host
+   47  sudo gpasswd -a $USER usrp
+   48  uhd_find_devices
+   49  autoreconf -i
+   50  cd osmo-trx/
+   51  autoreconf -i
+   52  ./configure
+   53  sudo make -j8
+   54  sudo make install
+   55  osmo-trx				// für Funktionstest 
+// Warnung threads für osmoTRX unterdrücken
+34  cd /etc/security
+43  sudo gedit limits.conf 
+# Unterdrücken der Fehlermeldung bezüglich Threads in osmoTRX
+@usrp   -  rtprio  50
+
+
+
+// Installation von OsmoBTS
+   70  git clone git://git.osmocom.org/osmo-bts.git
+   72  autoreconf -fi
+   73  cd osmo-bts
+   75  ./configure
+   91  sudo make -j8
+   92  sudo make install
+
+
+// PATH-Variable editieren
+   76  cd etc
+   77  sudo gedit environment
+Inhalt von "environment":
+PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"
+PKG_CONFIG_PATH="/home/netpc06/libosmo-abis/"
+LIBOSMOTRAU_CFLAGS="/home/netpc06/libosmo-abis/"
+LIBOSMOTRAU_LIBS="/home/netpc06/libosmo-abis/"
+
+
+
+// Installation von Open-ggsn
+  106  git clone git://git.osmocom.org/openggsn
+  107  cd openggsn/
+  108  autoreconf -fi
+  109  ./configure
+  110  sudo make -j8
+  111  sudo make install
+
+
+// Installation von Osmo-pcu
+  114  git clone https://git.osmocom.org/osmo-pcu
+  115  cd osmo-pcu/
+  116  autoreconf -fi
+  117  autoreconf -i
+  118  ./configure
+  119  sudo make -j8
+  120  sudo make install
+
+
+// Installation von Osmo-netif
+  143  git clone git://git.osmocom.org/libosmo-netif
+  144  cd libosmo-netif/
+  145  autoreconf -i
+  146  ./configure 
+  147  sudo make -j8
+  148  sudo make install
+
+
+// Installation von OpenBSC
+  152  sudo apt-get install libssl-dev
+  136  git clone git://git.osmocom.org/openbsc
+  137  cd openbsc/
+  150  cd openbsc/openbsc/
+  145  autoreconf -i
+  151  ./configure 
+  154  sudo make -j8
+  155  sudo make install
+
+
+// Konfigurieren von OpenBSC; Config-Datei mit Änderungen in nachfolgenden 
+// Verzeichnis kopieren und mit Befehl zugehörige Datenbank erzeugen
+  172  cd /home/netpc06/openbsc/openbsc/src/osmo-nitb
+  174  osmo-nitb -c openbsc.cfg
+
+
+// Versuche, die nix gebracht haben
+  180  sudo ldconfig
+  182  env | grep LD_LIB
+  183  export $LD_LIBRARY_PATH=/home/netpc06/libosmo-abis/src
+  184  export $LD_LIBRARY_PATH="/home/netpc06/libosmo-abis/src"
+  185  export $LD_LIBRARY_PATH="/home/mitm/libosmo-abis/src"
+  186  export $LD_LIBRARY_PATH=/home/netpc06/libosmo-abis/src
+  187  export LD_LIBRARY_PATH=/home/netpc06/libosmo-abis/src
+  189  sudo gedit environment 
+  196  ./configure --prefix=/usr/local/lib/
+  Pfad zu abis interface
+  /usr/local/lib/pkgconfig
+
+
+
+// Environment bereinigen, da ansonsten Fehler mit libosmo-abis auftreten
+// Inhalt von /etc/environment:
+PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"
+
+
+// Installation von OsmoBTS
+  207 git clone .....
+  208 cd /home/netpc06/osmo-bts
+  209 sudo autoreconf -i
+  210  ./configure --enable-trx
+  211  sudo make -j8
+  212  sudo make install
+  213  osmo-bts-trx -c osmo-bts.cfg
+
+
+-----
+
+
+// Transceiver starten (vor der BTS starten)
+cd /home/netpc06/osmo-trx
+sudo osmo-trx -f
+
+
+// OsmoBTS starten
+cd /home/netpc06/osmo-bts/src/osmo-bts-trx
+sudo osmo-bts-trx -c osmo-bts.cfg
+
+
+// Osmo-NitB starten
+cd /home/netpc06/openbsc/openbsc/src/osmo-nitb
+Terminal starten 
+osmo-nitb -c /home/netpc06/openbsc/openbsc/src/osmo-nitb/bsc.cfg -l /home/netpc06/openbsc/openbsc/src/osmo-nitb/hlr.sqlite3 -P -C --debug=DRLL:DCC:DMM:DRR:DRSL:DNM
+
+
+//
+telnet 127.0.0.1 4241
+
+
+
+
+-----
+
+
+
+// Konfigurationsdateien
+
+openbsc.cfg:	
+/home/netpc06/openbsc/openbsc/src/osmo-nitb
+
+osmo-bts.cfg:
+/home/netpc06/osmo-bts/src/osmo-bts-trx
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
