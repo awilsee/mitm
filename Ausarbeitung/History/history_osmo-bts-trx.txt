@@ -1,0 +1,23 @@
+#Festsetzen der IP Adresse und Einrichten der Verbindung zu 192.168.10.2 Ettus USRP2
+   26  sudo ifconfig
+   27  sudo ifconfig enp0s31f6 192.168.10.2
+   31  ping 192.168.10.2
+  213  uhd_find_devices 
+
+  203  osmo-nitb -c openbsc.cfg
+  204  osmo-nitb
+  205  osmo-bts-trx -c osmo-bts.cfg
+  206  cd ../../
+  207  cd ..
+  208  ls
+  209  cd osmo-bts
+  210  ls
+  211  cd src/osmo-bts-trx/
+  212  osmo-bts-trx -c osmo-bts.cfg
+  216  osmo-bts-trx -c osmo-bts.cfg
+  217  sudo osmo-bts-trx -c osmo-bts.cf
+  219  sudo osmo-bts-trx -c osmo-bts.cfg
+  220  history > history_osmo-bts-trx.txt
+
+1) Transceiver 
+2) 

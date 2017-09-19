@@ -1,0 +1,41 @@
+    1  echo "\n\n\n\nGRUB Bootloader Config mit Backup\n"
+ #libpcap
+   70  apt-get install libpcap-dev
+   71  sudo apt-get install libpcap-dev
+   72  make
+   73  sudo apt-get install libpcap-dev
+##osmo-pcu
+  216  sudo osmo-pcu osmo-pcu.cfg
+  217  sudo apt-get install sqlitebrowser 
+  218  sudo sqlitebrowser &
+  219  sudo osmo-pcu osmo-pcu.cfg
+  220  cd 
+  221  ls
+  222  openggsn
+  223  cd openggsn
+##osmo-sgsn
+  233  osmo-sgsn
+  234  make
+  235  sudo make
+  236  ls
+  237  cd sgsnemu/
+  238  ls
+  239  ./sgsnemu 
+  240  sudo ./sgsnemu 
+  241  cd ..
+  242  ls
+  243  cd ..
+  244  ls
+  245  cd openbsc/openbsc/src/ipaccess/.
+  246  ls
+  247  ifconfig
+  248  ./abisip-find enp0s31f6
+  249  sudo ./abisip-find enp0s31f6
+  250  ls
+  251  ipaccess-config -h
+  252  ipaccess-config -H
+  253  sudo ./abisip-find enp0s31f6
+  254  sudo osmo-pcu osmo-pcu.cfg
+#Starten von osmo-nitb
+  263  osmo-nitb -c openbsc.cfg -l hlr.sqlite3 -P -C --debug=DRLL:DCC:DMM:DRR:DRSL:DNM
+

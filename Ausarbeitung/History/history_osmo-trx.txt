@@ -1,0 +1,23 @@
+#Starten
+  203  osmo-nitb -c openbsc.cfg
+
+  205  osmo-bts-trx -c osmo-bts.cfg
+ 
+  226  cd osmo-bts-trx
+  227  osmo-bts-trx -c osmo-bts.cfg
+  228  echo $PKG_CONFIG_PATH$
+  229  uhd_find_device
+  230  uhd_find_devices
+  231  ping 192.168.10.2
+  232  uhd_find_devices
+  233  osmo-bts-trx -c osmo-bts.cfg
+  234  sudo osmo-trx -e -l INFO -g
+  235  sudo osmo-trx
+  236  sudo osmo-trx -f
+  237  cd ..
+  238  ls
+  239* cd osmo-trx -f
+  240  ping 192.168.10.2
+  241  sudo osmo-trx -f
+  242  history_osmo-trx.txt
+  243  history > history_osmo-trx.txt

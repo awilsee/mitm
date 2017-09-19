@@ -1,0 +1,96 @@
+   85  ./configure --prefix=/usr && make install
+   86  cd talloc-2.1.10/
+   87  ./configure --prefix=/usr && make install
+   88  make install
+   89  sudo make install
+   90  cd ..
+   91  cd openggsn/
+   92  autoreconf -fi
+   93  sudo ./configure
+   94  cd ..
+   95  cd libosmocore/
+   96  autoreconf -fi
+   97  sudo autoreconf -fi
+   98  sudo ./configure
+   99  sudo get-apt install libpcsclite
+  100  sudo apt-get install libpcsclite
+  101  sudo apt-get install libpcsclite-dev
+  102  sudo ./configure
+  103  sudo make
+  104  sudo make install
+  105  sudo ldconfig
+  106  cd ..
+  107  ls
+  108  cd openggsn/
+  109  autoreconf -fi
+  110  sudo ./configure
+  111  sudo make -j4
+  112  sudo make install
+  113  cd ..
+  114  git clone git://git.osmocom.org/openbsc
+  115  cd openbsc
+  116  autoreconf -fi
+  117  ls
+  118  cd openbsc/
+  119  ls
+  120  autoreconf -fi
+  121  ./configure
+  122  cd ../..
+  123  git clone git://git.osmocom.org/libosmo-abis
+  124  cd libosmo-abis
+  125  ls
+  126  autoreconf -fi
+  127  sudo ./configure
+  128  sudo make -j4
+  129  sudo make install
+  130  sudo ldconfig
+  131  cd ..
+  132  ls
+  133  cd openbsc
+  134  autoreconfig -i
+  135  autoreconf -fi
+  136  ls
+  137  cd openbsc/
+  138  autoreconf -fi
+  139  sudo ./configure
+  140  cd ..
+  141  git clone git://git.osmocom.org/libosmo-netif
+  142  cd libosmo-netif/
+  143  autoreconf -fi
+  144  sudo ./configure
+  145  sudo make -j4
+  146  ls
+  147  sudo make
+  148  sudo make -j4
+  149  ./configure
+  150  sudo ./configure
+  151  sudo apt-get install libsctp-dev
+  152  dpkg -L libsctp-dev |grep include
+  153  sudo ./configure
+  154  sudo make -j4
+  155  sudo make install
+  156  sudo ldconfig
+  157  cd ..
+  158  cd openbsc/openbsc/
+  159  autoreconfig -fi
+  160  autoreconf -fi
+  161  sudo ./configure
+  162  sudo apt-get install libsctp-dev
+  163  sudo apt-get install libcrypto-dev
+  164  sudo apt-get install libcrypto++dev
+  165  sudo apt-get install libssl-dev
+  166  dpkg -L libssl-dev |grep include
+  167  autoreconf -fi
+  168  sudo ./configure
+  169  sudo make -j4
+  170  sudo make install
+  171  sudo ldconfig
+  172  cd ..
+  173  git clone -b ttsou/egprs git://git.osmocom.org/osmo-bts
+  174  git remote -v
+  175  git remote add upstream git://git.osmocom.org/osmo-bts
+  176  git remote add upstream https://git.osmocom.org/osmo-bts
+  177  git --help
+  178  git clone --help
+  179  git init admin
+  180  cd admin
