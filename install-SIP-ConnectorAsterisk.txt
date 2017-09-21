@@ -28,6 +28,14 @@ Starten von pcapsipdump -> Aufnahme von Stream
   417  cd ../../
 
   419  nano osmo-sip-connector.cfg 
+app
+mncc
+  socket-path /tmp/bsc_mncc
+sip
+  local 127.0.0.1 5069
+  remote 127.0.0.1 5060
+
+
   421  osmo-sip-connector -c osmo-sip-connector.cfg
 //teils Probleme mit bereits belegtem Socket mit Port 5060 -> z.B. durch Asterisk?
 
@@ -42,7 +50,27 @@ starten der anderen Komponenten
 
   490  cd /etc/asterisk/
   460  sudo gedit sip.conf
+//append:
+[GSM]
+type=friend
+host=127.0.0.1
+dtmfmode=rfc2833
+canreinvite=no
+disallow=all
+allow=gsm
+context=gsmsubscriber
+port=5069
+
+
   461  sudo gedit extensions.conf 
+//append:
+[gsmsubscriber]
+exten=>_XXXXX,1,Dial(SIP/GSM/${EXTEN})
+exten=>_XXXXX,n,Playback(vm-nobodyavail)
+exten=>_XXXXX,n,HangUp
+
+
+
   464  sudo asterisk -r	//falls nicht geht Asterisk zuerst noch starten
 -> in CLI "core restart gracefully"
 
