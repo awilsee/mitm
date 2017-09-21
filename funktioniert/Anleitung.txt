@@ -160,6 +160,70 @@
 // hier die Datei osmo-bts.cfg kopieren
 
 
+
+
+/* --- Sip-Connector installieren ---- */
+
+// Sip-Sofia wird benötigt
+  sudo apt-get install libsofia-sip-ua-glib-dev
+
+  git clone git://git.osmocom.org/osmo-sip-connector.git
+  cd osmo-sip-connector/
+  autoreconf -fi
+  ./configure
+  sudo make -j8
+  sudo make install
+
+// Konfigurationsdatei "osmo-sip-connector.cfg" aus Ornder /home/mitm/osmo-sip-connector/doc/examples in /home/mitm/osmo-sip-connector/ kopieren und anpassen 
+
+// Funktionstest
+  osmo-sip-connector -c osmo-sip-connector.cfg
+
+
+
+
+/* --- Asterisk konfigurieren ---- */
+
+  cd /etc/asterisk/
+
+  sudo gedit sip.conf
+
+//folgendes anhängen:
+[GSM]
+type=friend
+host=127.0.0.1
+dtmfmode=rfc2833
+canreinvite=no
+disallow=all
+allow=gsm
+context=gsmsubscriber
+port=5069
+
+
+  sudo gedit extensions.conf 
+
+//folgendes anhängen:
+[gsmsubscriber]
+exten=>_XXXXX,1,Dial(SIP/GSM/${EXTEN})
+exten=>_XXXXX,n,Playback(vm-nobodyavail)
+exten=>_XXXXX,n,HangUp
+
+
+
+
+
+// Viewer für SQLite-Datenbanken
+  sudo apt-get install sqlitebrowser
+
+// Wireshark 
+  sudo apt-get install wireshark tshark 
+
+
+
+
+
+
+
 ---------------
 
 
@@ -178,6 +242,9 @@
 Terminal starten 
   osmo-nitb -c /home/mitm/openbsc/openbsc/src/osmo-nitb/openbsc.cfg -l /home/mitm/openbsc/openbsc/src/osmo-nitb/hlr.sqlite3 -P -C --debug=DRLL:DCC:DMM:DRR:DRSL:DNM
 
+// für Aufruf mit Sip-Connector
+osmo-nitb -c /home/mitm/openbsc/openbsc/src/osmo-nitb/openbsc.cfg -l /home/mitm/openbsc/openbsc/src/osmo-nitb/hlr.sqlite3 -P -C --debug=DRLL:DCC:DMM:DRR:DRSL:DNM -M /tmp/bsc_mncc
+
 
 
 3.)
@@ -194,6 +261,37 @@ Terminal starten
 
 
 
+------
+
+
+Wireshark
+
+
+
+
+
+
+Installation von pcapsipdump
+Herunterladen und Instruktionen folgen
+
+Starten von pcapsipdump -> Aufnahme von Stream 
+  515  sudo pcapsipdump -i lo -v 10 -d /home/aw/Wireshark/%Y%m%d/%H/%Y%m%d-%H%M%S-%f-%t-%i.pcap -U
+
+
+
+
+
+464  sudo asterisk -r	//falls nicht geht Asterisk zuerst noch starten
+-> in CLI "core restart gracefully"
+
+//umwandeln der mit Wireshark exportierten raw-Files in .wav
+  539  sox -t gsm -r 8000 -c 1 1Hin.raw 1Hin.wav
+
+  486  git clone https://gist.github.com/d2e9d05e082ce273962d742eb9acac16.git
+  488  cd pcap2wav/
+  489  mv pcap2wav pcap2wav.sh
+  490  chmod +x pcap2wav.sh 
+  495  ./pcap2wav.sh -z ~/Wireshark/20170920/15/20170920-150349-24144-23120-fc90602d-18a6-1236-b698-54ee75d74cd1.pcap 1wav.wav
 
 
 
