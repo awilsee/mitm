@@ -43,7 +43,7 @@ gtp and libraries are detected. Otherwise, osmo-sgsn will not be built and
 installed.
 
   $ git clone git://git.osmocom.org/openbsc
-  $ cd openbsc
+  $ cd openbsc/openbsc/
   $ autoreconf -i
   $ ./configure
   $ make
