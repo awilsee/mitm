@@ -1,0 +1,60 @@
+https://osmocom.org/projects/osmo-sip-conector/wiki/Osmo-sip-connector
+https://gist.github.com/avimar/d2e9d05e082ce273962d742eb9acac16
+
+http://www.admin-magazin.de/Das-Heft/2014/03/Dateien-und-Verzeichnisse-mit-Incron-ueberwachen
+
+  356  telnet 127.0.0.1 4242	//vty von ??
+  362  telnet 127.0.0.1 4241	//vty von ??
+
+  486  telnet 127.0.0.1 4256	//vty von sip-connector ?
+
+
+Installation von pcapsipdump
+Herunterladen und Instruktionen folgen
+
+Starten von pcapsipdump -> Aufnahme von Stream 
+  515  sudo pcapsipdump -i lo -v 10 -d /home/aw/Wireshark/%Y%m%d/%H/%Y%m%d-%H%M%S-%f-%t-%i.pcap -U
+
+  404  sudo apt-get install libsofia-sip-ua-glib-dev
+  405  sudo apt-get install asterisk
+  406  git clone git://git.osmocom.org/osmo-sip-connector.git
+  407  cd osmo-sip-connector/
+  408  autoreconf -fi
+  409  ./configure
+  410  make -j 4
+  411  sudo make install
+  413  cd doc/examples/
+  416  cp osmo-sip-connector.cfg ../../.
+  417  cd ../../
+
+  419  nano osmo-sip-connector.cfg 
+  421  osmo-sip-connector -c osmo-sip-connector.cfg
+//teils Probleme mit bereits belegtem Socket mit Port 5060 -> z.B. durch Asterisk?
+
+starten der anderen Komponenten
+  441  osmo-trx -f
+
+  442  cd openbsc/openbsc/src/osmo-nitb
+  447  osmo-nitb -c openbsc.cfg -l hlr.sqlite3 -P -C --debug=DRLL:DCC:DMM:DRR:DRSL:DNM -M /tmp/bsc_mncc
+
+  448  cd osmo-bts/src/osmo-bts-trx/
+  452  osmo-bts-trx -c osmo-bts.cfg
+
+  490  cd /etc/asterisk/
+  460  sudo gedit sip.conf
+  461  sudo gedit extensions.conf 
+  464  sudo asterisk -r	//falls nicht geht Asterisk zuerst noch starten
+-> in CLI "core restart gracefully"
+
+//umwandeln der mit Wireshark exportierten raw-Files in .wav
+  539  sox -t gsm -r 8000 -c 1 1Hin.raw 1Hin.wav
+
+  486  git clone https://gist.github.com/d2e9d05e082ce273962d742eb9acac16.git
+  488  cd pcap2wav/
+  489  mv pcap2wav pcap2wav.sh
+  490  chmod +x pcap2wav.sh 
+  495  ./pcap2wav.sh -z ~/Wireshark/20170920/15/20170920-150349-24144-23120-fc90602d-18a6-1236-b698-54ee75d74cd1.pcap 1wav.wav
+
+
+
+
