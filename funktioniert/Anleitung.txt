@@ -1,0 +1,199 @@
+    1  sudo apt-get update
+    2  sudo apt-get install asterisk
+    3  ps -alx | grep asterisk
+    4  sudo asterisk -r
+
+
+
+    7  sudo apt-get install git
+    8  git clone https://github.com/awilsee/mitm.git
+
+
+
+    9  sudo apt-get install python-pip
+   11  pip install bumpversion
+
+
+
+   12  sudo apt-get install libpcsclite-dev libtalloc-dev libortp-dev libsctp-dev libmnl-dev
+   13  sudo apt-get install  libdbi-dev libdbd-sqlite3 libsqlite3-dev sqlite3 libc-ares-dev 
+   19  sudo apt-get install libdbi0-dev build-essential libtool autoconf automake
+   20  sudo apt-get install libsqlite3-tcl sqlite-autoconf sqlite-autoconfg
+
+
+
+// Alle Verzeichnisse, die über Git heruntergeladen wurden liegen in /home/mitm/
+
+
+
+
+/* --- Osmo-core installieren ---- */
+
+  git clone git://git.osmocom.org/libosmocore.git
+  cd libosmocore/
+  autoreconf -fi
+  ./configure
+  sudo make -j8
+  sudo make install
+
+
+
+
+/* --- Abis-Interface installieren ---- */
+
+  git clone https://github.com/osmocom/libosmo-abis.git
+  cd libosmo-abis/
+  autoreconf -fi
+  ./configure
+  sudo make -j8
+  sudo make install
+
+
+
+
+/* --- Treiber der Ettus USRP-Box installieren ---- */
+
+// zuerst IP des Rechners anpassen, so dass sich Box im selben Subnetz befindet
+// hier Rechner: 192.168.10.10
+// Ettus-Box:	 192.168.10.2
+
+  sudo apt-get install --no-install-recommends libusb-1.0-0-dev libboost-dev
+  sudo apt-get install libuhd-dev uhd-host
+  sudo gpasswd -a $USER usrp
+  
+// Test, ob Box erreichbar
+  uhd_find_devices
+
+
+
+
+/* --- Osmo-trx installieren, Transceiver ---- */
+
+  git clone git://git.osmocom.org/osmo-trx
+  cd osmo-trx/
+  autoreconf -fi
+  ./configure 
+  sudo make -j8
+  sudo make install
+  osmo-trx 		// für Test
+
+// Warnung zu Threads unterdrücken
+  cd /etc/security
+  sudo gedit limits.conf 
+// folgenden Eintrag hinzufügen:
+  # Unterdrücken der Fehlermeldung bezüglich Threads in osmoTRX
+  @usrp   -  rtprio  50
+
+
+
+
+/* --- Osmo-ggsn installieren, k.A. warum ---- */
+
+  git clone git://git.osmocom.org/openggsn
+  cd openggsn/
+  autoreconf -fi
+  ./configure
+  sudo make -j8
+  sudo make install
+
+
+
+
+/* --- Osmo-pcu installieren, k.A. warum ---- */
+
+  git clone https://git.osmocom.org/osmo-pcu
+  cd osmo-pcu/
+  autoreconf -fi
+  ./configure
+  sudo make -j8
+  sudo make install
+
+
+
+
+/* --- Osmo-netif installieren, k.A. warum ---- */
+
+  git clone git://git.osmocom.org/libosmo-netif
+  cd libosmo-netif/
+  autoreconf -fi
+  ./configure
+  sudo make -j8
+  sudo make install
+
+
+
+
+// benötigt OpenBSC
+  sudo apt-get install libssl-dev
+
+
+
+/* --- OpenBSC installieren ---- */
+
+  git clone git://git.osmocom.org/openbsc
+  cd openbsc/openbsc/
+  autoreconf -fi
+  ./configure
+  sudo make -j8
+  sudo make install
+
+// OpenBSC konfigurieren
+  cd /home/mitm/openbsc/openbsc/src/osmo-nitb
+// hier die beiden Dateien kopieren
+// - hlr.sqlite3	--> Tabelle "subscriber" enthält Daten der mobilen Endgeräte
+//			    funktionierender Viewer: sudo apt-get install sqlitebrowser    
+// - openbsc.cfg 	--> Hinweis: auf "unit-id" und Kanaleinstellungen achten
+
+
+
+
+/* --- OsmoBTS installieren ---- */
+
+  cd osmo-bts/
+  autoreconf -fi
+  ./configure --enable-trx
+  sudo make -j8
+  sudo make install
+
+// OsmoBTS konfigurieren
+  cd /home/mitm/osmo-bts/src/osmo-bts-trx
+// hier die Datei osmo-bts.cfg kopieren
+
+
+---------------
+
+
+/* --- GSM-Netz in Betrieb nehmen ---- */
+
+1.)
+// Transceiver starten (vor der BTS starten)
+  cd /home/mitm/osmo-trx
+  sudo osmo-trx -f
+
+
+
+2.)
+// Osmo-NitB starten
+  cd /home/mitm/openbsc/openbsc/src/osmo-nitb
+Terminal starten 
+  osmo-nitb -c /home/mitm/openbsc/openbsc/src/osmo-nitb/openbsc.cfg -l /home/mitm/openbsc/openbsc/src/osmo-nitb/hlr.sqlite3 -P -C --debug=DRLL:DCC:DMM:DRR:DRSL:DNM
+
+
+
+3.)
+// OsmoBTS starten
+  cd /home/mitm/osmo-bts/src/osmo-bts-trx
+  sudo osmo-bts-trx -c osmo-bts.cfg
+
+
+4.)
+// Asterisk starten
+  sudo asterisk -r
+
+
+
+
+
+
+
+
