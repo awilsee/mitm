@@ -1,0 +1,46 @@
+
+\section{Inbetriebnahme}
+Für Inbetriebnahme des GSM Netzes waren einige Vorinstallationen sowie das Einrichten von Ubuntu 16.04.3 nötig. Im Folgenden wird das Vorgehen zur Einrichtung des Systems sowie die Inbetriebnahme des GSM Netzes beschrieben.
+
+\subsection{Vorinstallationen}
+
+\subsubsection{Ubuntu 16.04.3}
+Zunächst wurde das Betriebssystem Ubuntu 16.04.3 auf einem Labor-Rechner installiert und eingerichtet.
+
+\subsubsection{Git}
+Da die Open-Source Projekte von OsmocomBB auf Git-Repositories liegen, wurde zunächst Git eingerichtet. Zur Versionskontrolle und Verwaltung des Codes wurde außerdem ein Team-eigenes Git Repository angelegt.
+
+\begin{lstlisting}
+sudo apt-get install git
+\end{lstlisting}
+
+\subsubsection{Softwarevoraussetzungen}
+Osmocom empfiehlt zunächst die Einrichtung von einigen Bibliotheken und sonstigen, nötigen Abhängigkeiten als Voraussetzung für die Inbetriebnahme der GSM Komponenten. Diese wurden mittels Paketmanagers wie folgt installiert.
+
+\begin{lstlisting}
+sudo apt-get install libpcsclite-dev libtalloc-dev libortp-dev libsctp-dev 
+libmnl-dev libdbi-dev libdbd-sqlite3 libsqlite3-dev sqlite3 libc-ares-dev 
+libdbi0-dev libdbd-sqlite3 build-essentials libtool autoconf automake pkg-config 
+libsqlite3-tcl sqlite-autoconf sqlite-autoconfg
+\end{lstlisting}
+
+Die die Fehler bezüglich Bumpversion nicht behoben werden konnten, wurden sie ignoriert. Dies zog keinerlei Konsequenzen hinsichtlich der Inbetriebnahme der GSM Komponenten nach sich.
+
+Zusätzlich bedarf es der separaten Installation der Software Bibliotheken libosmo-abis, libosmocore und libosmo-netif. Diese wurden von den entsprechenden Git Repositories heruntergeladen und nach analogem Vorgehen installiert.
+
+\begin{lstlisting}
+git clone git://git.osmocom.org/<lib-source>
+cd <lib-source>
+autoreconf -fi
+./configure
+make
+make install
+sudo ldconfig
+\end{lstlisting}
+
+Trotz der sorgfältigen Installation einiger Softwarevoraussetzungen traten zusätzliche Abhängigkeiten bei der Installation einzelner GSM Komponenten auf, welche in \ref{GSM_Komp} beschrieben sind.
+
+\subsection{Installation einzelner GSM Komponenten}\label{GSM_Komp}
+OsmocomBB hält detaillierte Beschreibungen zur Installation der GSM Komponenten bereit, welche zur Inbetriebnahme des in Rahmen dieser Arbeit verwendeten GSM Netzes herangezogen wurden. Im Folgenden wird die Installation und Einrichtung der GSM Komponenten genauer erläutert. 
+\subsubsection{Openggsn}
+\subsection{Starten des Systems}

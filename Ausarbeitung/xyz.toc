@@ -1,2 +1,10 @@
 \select@language {ngerman}
 \contentsline {section}{\numberline {1}Grundlagen}{1}{section.1}
+\contentsline {section}{\numberline {2}Inbetriebnahme}{2}{section.2}
+\contentsline {subsection}{\numberline {2.1}Vorinstallationen}{2}{subsection.2.1}
+\contentsline {subsubsection}{\numberline {2.1.1}Ubuntu 16.04.3}{2}{subsubsection.2.1.1}
+\contentsline {subsubsection}{\numberline {2.1.2}Git}{2}{subsubsection.2.1.2}
+\contentsline {subsubsection}{\numberline {2.1.3}Softwarevoraussetzungen}{2}{subsubsection.2.1.3}
+\contentsline {subsection}{\numberline {2.2}Installation einzelner GSM Komponenten}{2}{subsection.2.2}
+\contentsline {subsubsection}{\numberline {2.2.1}\IeC {\textbullet }}{2}{subsubsection.2.2.1}
+\contentsline {subsection}{\numberline {2.3}Starten des Systems}{2}{subsection.2.3}
