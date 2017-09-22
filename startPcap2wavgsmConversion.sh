@@ -18,12 +18,12 @@ if [ ! -f "$1/$2" ]; then
 fi
 
 #store tmp fileNo
-if [ ! -f "$WAVPATH/fileNo" ]; then
-    echo 0 > $WAVPATH/fileNo
+if [ ! -f "/home/all/fileNo" ]; then
+    echo 0 > /home/all/fileNo
 fi
-read FILENO < ./$WAVPATH/fileNo
+read FILENO < ./home/all/fileNo
 FILENO=$(( $FILENO + 1 ))
-echo $FILENO > $WAVPATH/fileNo
+echo $FILENO > /home/all/fileNo
 FILENO=$(( $FILENO % 5 ))
 
 #converting

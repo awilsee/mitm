@@ -2,6 +2,13 @@
 
 HOMEPATH=/home/all
 
+#check if script called with root privileges
+if [ `id -u` != 0 ];then
+    echo "You have to start this script with root privileges"
+    exit 1
+fi
+
+
 echo ">>creating folder with access of all user"
 sudo mkdir -p $HOMEPATH/wiresharkCalls
 sudo mkdir -p $HOMEPATH/wavCalls
@@ -42,7 +49,8 @@ cd ..
 echo ""
 
 sudo chmod +x startingPcapsipdump.sh
-./startingPcapsipdump.sh $HOMEPATH
+sudo ./startingPcapsipdump.sh $HOMEPATH
+echo ""
 
 echo ">>installing incron if not already installed.."
 if ! which "incrond" > /dev/null
@@ -52,7 +60,7 @@ fi
 echo ""
 echo ""
 
-echo ">>YOU have manually to do that:"
+echo ">>YOU have to do that manually:"
 echo ">>append your username into '/etc/incron.allow'"
 
 echo ">>starting service with 'systemctl start incron.service'"
