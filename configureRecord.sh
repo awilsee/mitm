@@ -41,9 +41,11 @@ if ! which "svn" > /dev/null
 then
 	sudo apt-get install -y subversion
 fi
+sudo apt-get install -y libpcap-dev
 svn checkout https://svn.code.sf.net/p/pcapsipdump/code/trunk pcapsipdump-code
 cd pcapsipdump-code
-make
+sudo cp ../calltable.cpp .
+sudo make
 sudo make install
 cd ..
 echo ""
@@ -66,6 +68,6 @@ echo ">>append your username into '/etc/incron.allow'"
 echo ">>starting service with 'systemctl start incron.service'"
 
 echo ">>add job with 'incrontab -e' and append following line:"
-echo "/home/all/wiresharkCalls IN_CREATE /home/all/startPcap2wavgsmConversion.sh \$@ \$#"
+echo "/home/all/wiresharkCalls IN_CLOSE_WRITE /home/all/startPcap2wavgsmConversion.sh \$@ \$#"
 echo ""
 
