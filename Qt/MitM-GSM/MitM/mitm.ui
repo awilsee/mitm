@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>367</width>
-    <height>271</height>
+    <height>313</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -174,6 +174,35 @@
      <rect>
       <x>240</x>
       <y>210</y>
+      <width>99</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Starten</string>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>260</y>
+      <width>121</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SQLiteBrowser:</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonSQLBrowser">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>250</y>
       <width>99</width>
       <height>27</height>
      </rect>

@@ -16,6 +16,7 @@ MitM::MitM(QWidget *parent) :
     connect(ui->pushButtonBTS, SIGNAL(clicked()), this, SLOT(btsPressed()));
     connect(ui->pushButtonSipConnector, SIGNAL(clicked()), this, SLOT(sipConnectorPressed()));
     connect(ui->pushButtonWireshark, SIGNAL(clicked()), this, SLOT(wiresharkPressed()));
+    connect(ui->pushButtonSQLBrowser, SIGNAL(clicked()), this, SLOT(sqlBrowserPressed()));
 }
 
 
@@ -162,7 +163,21 @@ void MitM::sipConnectorPressed(){
 
 
 
+void MitM::sqlBrowserPressed(){
 
+    QProcess* exec = new QProcess(this);
+
+    if (ui->pushButtonSQLBrowser->isChecked()) {
+
+        exec->start("./startSQLBrowser.sh");
+        ui->pushButtonSQLBrowser->setText("Stoppen");
+    }
+    else {
+
+        exec->close();
+        ui->pushButtonSQLBrowser->setText("Starten");
+    }
+}
 
 
 

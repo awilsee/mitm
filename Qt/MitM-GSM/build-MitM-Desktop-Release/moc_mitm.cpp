@@ -22,7 +22,7 @@ static const uint qt_meta_data_MitM[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       6,   14, // methods
+       7,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -36,6 +36,7 @@ static const uint qt_meta_data_MitM[] = {
       53,    5,    5,    5, 0x0a,
       66,    5,    5,    5, 0x0a,
       85,    5,    5,    5, 0x0a,
+     107,    5,    5,    5, 0x0a,
 
        0        // eod
 };
@@ -43,7 +44,7 @@ static const uint qt_meta_data_MitM[] = {
 static const char qt_meta_stringdata_MitM[] = {
     "MitM\0\0checkInput()\0transceiverPressed()\0"
     "btsPressed()\0bscPressed()\0wiresharkPressed()\0"
-    "sipConnectorPressed()\0"
+    "sipConnectorPressed()\0sqlBrowserPressed()\0"
 };
 
 void MitM::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -58,6 +59,7 @@ void MitM::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void *
         case 3: _t->bscPressed(); break;
         case 4: _t->wiresharkPressed(); break;
         case 5: _t->sipConnectorPressed(); break;
+        case 6: _t->sqlBrowserPressed(); break;
         default: ;
         }
     }
@@ -96,9 +98,9 @@ int MitM::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 6)
+        if (_id < 7)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 6;
+        _id -= 7;
     }
     return _id;
 }

@@ -36,7 +36,7 @@ public slots:
     void bscPressed();
     void wiresharkPressed();
     void sipConnectorPressed();
-
+    void sqlBrowserPressed();
 
 };
 

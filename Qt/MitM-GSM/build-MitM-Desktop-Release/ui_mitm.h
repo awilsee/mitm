@@ -39,13 +39,15 @@ public:
     QPushButton *pushButtonBTS;
     QPushButton *pushButtonSipConnector;
     QPushButton *pushButtonWireshark;
+    QLabel *label_7;
+    QPushButton *pushButtonSQLBrowser;
     QToolBar *mainToolBar;
 
     void setupUi(QMainWindow *MitM)
     {
         if (MitM->objectName().isEmpty())
             MitM->setObjectName(QString::fromUtf8("MitM"));
-        MitM->resize(367, 271);
+        MitM->resize(367, 313);
         centralWidget = new QWidget(MitM);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         lineEdit = new QLineEdit(centralWidget);
@@ -90,6 +92,13 @@ public:
         pushButtonWireshark->setObjectName(QString::fromUtf8("pushButtonWireshark"));
         pushButtonWireshark->setGeometry(QRect(240, 210, 99, 27));
         pushButtonWireshark->setCheckable(true);
+        label_7 = new QLabel(centralWidget);
+        label_7->setObjectName(QString::fromUtf8("label_7"));
+        label_7->setGeometry(QRect(30, 260, 121, 17));
+        pushButtonSQLBrowser = new QPushButton(centralWidget);
+        pushButtonSQLBrowser->setObjectName(QString::fromUtf8("pushButtonSQLBrowser"));
+        pushButtonSQLBrowser->setGeometry(QRect(240, 250, 99, 27));
+        pushButtonSQLBrowser->setCheckable(true);
         MitM->setCentralWidget(centralWidget);
         mainToolBar = new QToolBar(MitM);
         mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
@@ -114,6 +123,8 @@ public:
         pushButtonBTS->setText(QApplication::translate("MitM", "Starten", 0, QApplication::UnicodeUTF8));
         pushButtonSipConnector->setText(QApplication::translate("MitM", "Starten", 0, QApplication::UnicodeUTF8));
         pushButtonWireshark->setText(QApplication::translate("MitM", "Starten", 0, QApplication::UnicodeUTF8));
+        label_7->setText(QApplication::translate("MitM", "SQLiteBrowser:", 0, QApplication::UnicodeUTF8));
+        pushButtonSQLBrowser->setText(QApplication::translate("MitM", "Starten", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };
