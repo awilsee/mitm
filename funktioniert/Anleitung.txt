@@ -254,9 +254,14 @@ osmo-nitb -c /home/mitm/openbsc/openbsc/src/osmo-nitb/openbsc.cfg -l /home/mitm/
 
 
 4.)
-// Asterisk starten
+// Asterisk starten; --> nicht nötig
   sudo asterisk -r
 
+
+5.)
+// Sip-Connector starten
+  cd osmo-sip-connector/
+  sudo osmo-sip-connector -c osmo-sip-connector.cfg
 
 
 
