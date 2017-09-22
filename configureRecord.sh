@@ -5,17 +5,19 @@ HOMEPATH=/home/all
 echo ">>creating folder with access of all user"
 sudo mkdir -p $HOMEPATH/wiresharkCalls
 sudo mkdir -p $HOMEPATH/wavCalls
+sudo mkdir -p $HOMEPATH/gsmCalls
 echo ""
 
 echo ">>extending permissions"
 sudo chmod a=rwx $HOMEPATH
 sudo chmod a=rwx $HOMEPATH/wiresharkCalls
 sudo chmod a=rwx $HOMEPATH/wavCalls
+sudo chmod a=rwx $HOMEPATH/gsmCalls
 echo ""
 
 echo ">>copying conversionScript"
-cp startPcap2wavConversion.sh $HOMEPATH/.
-chmod a=rwx $HOMEPATH/startPcap2wavConversion.sh
+cp startPcap2wavgsmConversion.sh $HOMEPATH/.
+chmod a=rwx $HOMEPATH/startPcap2wavgsmConversion.sh
 echo ""
 
 echo ">>getting pcap2wav"
