@@ -1,5 +1,11 @@
 #!/bin/bash
 
+#check if script called with root privileges
+if [ `id -u` != 0 ];then
+    echo "You have to start this script with root privileges"
+    exit 1
+fi
+
 HOMEPATH=$1
 
 if [[ $HOMEPATH == "" ]]
