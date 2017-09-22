@@ -18,12 +18,8 @@ echo ""
 echo ">>copying conversionScript"
 cp startPcap2wavgsmConversion.sh $HOMEPATH/.
 chmod a=rwx $HOMEPATH/startPcap2wavgsmConversion.sh
-echo ""
-
-echo ">>getting pcap2wav"
-git clone https://gist.github.com/avimar/d2e9d05e082ce273962d742eb9acac16
-cp d2e9d05e082ce273962d742eb9acac16/pcap2wav $HOMEPATH/pcap2wav.sh
-chmod a=rwx $HOMEPATH/pcap2wav.sh
+cp pcap2wavgsm.sh $HOMEPATH/.
+chmod a=rwx $HOMEPATH/pcap2wavgsm.sh
 echo ""
 
 echo ">>checking dependencies "
@@ -45,12 +41,8 @@ sudo make install
 cd ..
 echo ""
 
-echo ">>starting pcapsipdump if not already started"
-if ! pgrep -x "pcapsipdump" > /dev/null
-then
-	sudo pcapsipdump -i lo -v 10 -d $HOMEPATH/wiresharkCalls/%Y%m%d-%H%M%S-%f-%t-%i.pcap -U
-fi
-echo ""
+sudo chmod +x startingPcapsipdump.sh
+./startingPcapsipdump.sh $HOMEPATH
 
 echo ">>installing incron if not already installed.."
 if ! which "incrond" > /dev/null
@@ -66,6 +58,6 @@ echo ">>append your username into '/etc/incron.allow'"
 echo ">>starting service with 'systemctl start incron.service'"
 
 echo ">>add job with 'incrontab -e' and append following line:"
-echo "/home/all/wiresharkCalls IN_CREATE /home/all/startPcap2wavConversion.sh \$@ \$#"
+echo "/home/all/wiresharkCalls IN_CREATE /home/all/startPcap2wavgsmConversion.sh \$@ \$#"
 echo ""
 
