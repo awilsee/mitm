@@ -2,44 +2,68 @@
 
 HOMEPATH=/home/all
 
-echo "creating folder with access of all user"
+echo ">>creating folder with access of all user"
 sudo mkdir -p $HOMEPATH/wiresharkCalls
 sudo mkdir -p $HOMEPATH/wavCalls
+echo ""
 
-echo "extending permissions"
+echo ">>extending permissions"
 sudo chmod a=rwx $HOMEPATH
 sudo chmod a=rwx $HOMEPATH/wiresharkCalls
 sudo chmod a=rwx $HOMEPATH/wavCalls
+echo ""
 
-echo "copying conversionScript"
+echo ">>copying conversionScript"
 cp startPcap2wavConversion.sh $HOMEPATH/.
 chmod a=rwx $HOMEPATH/startPcap2wavConversion.sh
+echo ""
 
-echo "getting pcap2wav"
+echo ">>getting pcap2wav"
 git clone https://gist.github.com/avimar/d2e9d05e082ce273962d742eb9acac16
-mv d2e9d05e082ce273962d742eb9acac16/pcap2wav $HOMEPATH/pcap2wav.sh
-chmod +x $HOMEPATH/pcap2wav.sh
+cp d2e9d05e082ce273962d742eb9acac16/pcap2wav $HOMEPATH/pcap2wav.sh
+chmod a=rwx $HOMEPATH/pcap2wav.sh
+echo ""
 
-echo "installing pcapsipdump"
+echo ">>checking dependencies "
+if ! which "tshark" > /dev/null
+then
+	sudo apt-get install -y tshark sox
+fi
+echo ""
+
+echo ">>installing pcapsipdump"
+if ! which "svn" > /dev/null
+then
+	sudo apt-get install -y subversion
+fi
 svn checkout https://svn.code.sf.net/p/pcapsipdump/code/trunk pcapsipdump-code
 cd pcapsipdump-code
 make
 sudo make install
 cd ..
-
-echo "starting pcapsipdump"
-sudo pcapsipdump -i lo -v 10 -d $HOMEPATH/wiresharkCalls/%Y%m%d-%H%M%S-%f-%t-%i.pcap -U
-
-echo "Please install incron with:"
-echo "sudo apt-get install incron"
 echo ""
 
-echo "append your username into '/etc/incron.allow'"
+echo ">>starting pcapsipdump if not already started"
+if ! pgrep -x "pcapsipdump" > /dev/null
+then
+	sudo pcapsipdump -i lo -v 10 -d $HOMEPATH/wiresharkCalls/%Y%m%d-%H%M%S-%f-%t-%i.pcap -U
+fi
+echo ""
 
-echo "enable incron with 'systemctl enable incrond'"
-echo "starting service with 'systemctl start incron.service'"
+echo ">>installing incron if not already installed.."
+if ! which "incrond" > /dev/null
+then
+	sudo apt-get install -y incron
+fi
+echo ""
+echo ""
 
-echo "add job with 'incrontab -e' and append following line:"
-echo "/home/all/wiresharkCalls IN_CREATE /home/all/startPcap2wavConversion.sh $$@ $$#"
+echo ">>YOU have manually to do that:"
+echo ">>append your username into '/etc/incron.allow'"
 
+echo ">>starting service with 'systemctl start incron.service'"
+
+echo ">>add job with 'incrontab -e' and append following line:"
+echo "/home/all/wiresharkCalls IN_CREATE /home/all/startPcap2wavConversion.sh \$@ \$#"
+echo ""
 

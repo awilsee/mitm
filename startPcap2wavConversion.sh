@@ -18,7 +18,10 @@ fi
 
 
 echo "$DATE converting pcap to wav..." >> $LOGFILE
-/home/all/pcap2wav.sh -z "$1/$2" "$WAVPATH/$2.wav"
+#echo "$DATE /home/all/pcap2wav.sh -z \"$1/$2\" \"$WAVPATH/$2.wav\"" >> $LOGFILE
+#/home/all/pcap2wav.sh -z "$1/$2" "$WAVPATH/$2.wav"
+echo "$DATE /home/all/pcap2wav.sh -z \"$1/$2\" \"$WAVPATH/recordedCall.wav\"" >> $LOGFILE
+/home/all/pcap2wav.sh -z "$1/$2" "$WAVPATH/recordedCall.wav"
 echo "$DATE script ended..." >> $LOGFILE
 
 echo >> $LOGFILE
