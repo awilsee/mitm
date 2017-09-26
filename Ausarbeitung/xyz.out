@@ -1,9 +1,21 @@
 \BOOKMARK [1][]{section.1}{Grundlagen}{}% 1
-\BOOKMARK [1][]{section.2}{Inbetriebnahme}{}% 2
-\BOOKMARK [2][]{subsection.2.1}{Vorinstallationen}{section.2}% 3
-\BOOKMARK [3][]{subsubsection.2.1.1}{Ubuntu 16.04.3}{subsection.2.1}% 4
-\BOOKMARK [3][]{subsubsection.2.1.2}{Git}{subsection.2.1}% 5
-\BOOKMARK [3][]{subsubsection.2.1.3}{Softwarevoraussetzungen}{subsection.2.1}% 6
-\BOOKMARK [2][]{subsection.2.2}{Installation einzelner GSM Komponenten}{section.2}% 7
-\BOOKMARK [3][]{subsubsection.2.2.1}{\200}{subsection.2.2}% 8
-\BOOKMARK [2][]{subsection.2.3}{Starten des Systems}{section.2}% 9
+\BOOKMARK [1][]{section.2}{Architektur des Osmocom Systems}{}% 2
+\BOOKMARK [1][]{section.3}{Architektur des OpenBTS Systems}{}% 3
+\BOOKMARK [1][]{section.4}{Inbetriebnahme eines Osmocom Systems}{}% 4
+\BOOKMARK [2][]{subsection.4.1}{Vorinstallationen}{section.4}% 5
+\BOOKMARK [3][]{subsubsection.4.1.1}{Ubuntu 16.04.3}{subsection.4.1}% 6
+\BOOKMARK [3][]{subsubsection.4.1.2}{Git}{subsection.4.1}% 7
+\BOOKMARK [3][]{subsubsection.4.1.3}{Softwarevoraussetzungen}{subsection.4.1}% 8
+\BOOKMARK [2][]{subsection.4.2}{Installation einzelner GSM Komponenten}{section.4}% 9
+\BOOKMARK [3][]{subsubsection.4.2.1}{Openggsn}{subsection.4.2}% 10
+\BOOKMARK [2][]{subsection.4.3}{Starten des Systems}{section.4}% 11
+\BOOKMARK [1][]{section.5}{Inbetriebnahme eines OpenBTS Systems}{}% 12
+\BOOKMARK [2][]{subsection.5.1}{Vorinstallationen}{section.5}% 13
+\BOOKMARK [3][]{subsubsection.5.1.1}{Ubuntu 16.04.3}{subsection.5.1}% 14
+\BOOKMARK [3][]{subsubsection.5.1.2}{Git}{subsection.5.1}% 15
+\BOOKMARK [3][]{subsubsection.5.1.3}{Softwarevoraussetzungen}{subsection.5.1}% 16
+\BOOKMARK [2][]{subsection.5.2}{Installation einzelner GSM Komponenten}{section.5}% 17
+\BOOKMARK [2][]{subsection.5.3}{Starten des Systems}{section.5}% 18
+\BOOKMARK [1][]{section.6}{Umsetzung des Projektziels}{}% 19
+\BOOKMARK [1][]{section.7}{Ergebnisse}{}% 20
+\BOOKMARK [1][]{section.8}{Ergebnisse}{}% 21
