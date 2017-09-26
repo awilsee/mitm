@@ -1,1 +1,97 @@
 \section{Umsetzung des Projektziels}
+Während es sich bei den beiden vorherigen Kapiteln um die Inbetriebnahme des GSM-Netzes selbst gehandelt haben, geht es nun um die konkrete Umsetzung des eigentlichen Projektziels "Man-In-The-Middle". Dabei wird versucht die Gesprächsdaten auf der Strecke zwischen BTS, BSC und PBX abzugreifen.
+
+Zuerst versucht zwischen BTS und BSC?!?
+-> evtl Screenshot von Daten des ABIS-Interface?!
+https://osmocom.org/projects/osmo-sip-conector/wiki/Osmo-sip-connector
+http://ftp.osmocom.org/docs/latest/osmonitb-usermanual.pdf -> p.6/7
+
+Abgreifen der Daten zwischen BTS und BSC (ABIS-Interface) schwierig -> Daten weiter analysiert und weitere Angriffspunkte ausmachen.
+-> Abgreifen der Daten vor der Telefonanlage (Asterisk (OPEN: IAX; Osmo: PBX)) -> dadurch die Daten im VOIP Format (SIP + RTP), welches via PC relativ gut zu handeln ist.
+
+Zunächst eigenes analysieren der Daten. Suche nach pratkischem Tool im Internet
+-> pcapsipdump
+
+Für die Installation und Einrichtung der benötigten Tools wurde ein Bash-Skript erstellt, welches die meisten Schritte automatisch durchführt. Die manuell noch auszuführenden Schritte werden in der Komandozeile ausgegeben.
+\lstinputlisting [caption={Install and configure Script}\label{lst:configure.sh},captionpos=t,language=bash]
+{../configureRecord.sh}
+
+
+\subsection{pcapsipdump}
+\subsection{Abspeichern der Daten}
+Mit den beiden Komandozeilenanwendungen tshark und tcpdump können Daten von einem Interface in eine pcap-Datei abgespeichert werden. Hierbei können auch bereits schon beim aufnehmen Filter gesetzt werden, sodass nur die relevanten Daten gespeichert werden.
+
+
+pcapsipdump ist open-source Tool, welches auf der libpcap basiert. Das Tool hört auf einem Interface die Daten mit und speichert die SIP/RTP sessions als pcap-Datei ab. Diese Datei kann nun in tcpdump, Wireshark oder ähnlichem geöffnet, eingelesen und weiterverarbeitet werden. Das nette Feature dabei ist, dass das Tool selbstständig pro Session eine Datei anlegt. Das Tool läuft als Hintergrundprozess, sodass es nur einmal manuell gestartet werden muss. Alternativ kann das Tool auch mit dem systemd-Init-Prozess automatisch gestartet werden, sofern man es nachträglich selbst konfiguriert.
+Hören das Loopback-Interface ab -> da all Tools auf dem selben Rechner laufen und die Tools über diese Schnittstelle miteinander kommunizieren.
+
+Abhängigkeiten des Programms installieren
+\begin{lstlisting}
+sudo apt-get install -y libpcap-dev
+\end{lstlisting}
+
+Gestartet wird das Tool mit folgenden Parametern. 
+\begin{lstlisting}
+sudo pcapsipdump -i lo -v 10 -d $HOMEPATH/wiresharkCalls/%Y%m%d-%H%M%S-%f-%t-%i.pcap -U
+\end{lstlisting}
+
+
+Im späteren Verlauf Probleme mit dem Tool, sodass letztendlich Source-Code angepasst wurde. Das Problem lag darin, dass das Tool die erstellte Datei lange nicht schließt, obwohl bereits seit längerem die Session beendet ist. Der Übeltäter war ein Timer in der calltable-Klasse, welcher auf 5 Minute gestellt war. Nach Verändern des Timers auf 5 Sekunden wurde auch die erstellte pcap-Datei kurz nach Ende der Session geschlossen.
+
+\begin{lstlisting}[xleftmargin=.04\textwidth, firstnumber=211]
+  ...
+ if (table[idx].is_used && (
+ 	(currtime - table[idx].last_packet_time > 5) ||
+    (currtime - table[idx].first_packet_time > opt_absolute_timeout))){
+  ...
+\end{lstlisting}
+
+\subsection{pcap2wavgsm}
+\subsection{Extrahieren der Daten}
+Zunächst wurden die von pcapsipdump extrahierten Daten mit Wireshark manuell analysiert. Darin sind nun wirklich nur noch die SIP- und RTP-Packet enthalten, wie auf fig XXXXX zu sehen. Mit Wireshark erkennt auch den VOIP-Anruf und kombiniert die RTP-Packages korrekt. Allerdings konnte der Stream nicht direkt im Programm abgespielt werden. Der Grund hierfür ist vermutlich, dass Wireshark gsm nicht dekodieren kann.
+Jedoch gibt es einen Weg, wie die beiden Streams als .raw-Daten exportiert werden können. Hierfür ein beliebiges RTP-Packet auswählen, über "Telefonie->RTP->Stream Analyse" den Stream analysieren. Nun kann der Hinweg und Rückweg als seperate Datei gespeichert werden. Man muss jedoch als Datei-Typ .raw auswählen.
+
+Die .raw-Dateien können nun via folgendem Komandozeilenaufruf abgespielt werden
+\begin{lstlisting}
+padsp play -t gsm -r 8000 -c 1 example.gsm
+\end{lstlisting}
+
+Mit dem universellen und sehr mächtigen Audiokonverter SoX können die Dateien über folgenden Komandozeilenaufruf in .wav convertiert werden, sodass diese auch mit jedem herkömmlichen Media Player abgespielt werden können.
+\begin{lstlisting}
+sox -t gsm -r 8000 -c 1 example.raw exampleConverted.wav
+\end{lstlisting}
+
+Mit dem Bash-Skript pcap2wav von https://gist.github.com/avimar/d2e9d05e082ce273962d742eb9acac16 können genau diese Schritte automatisiert ausgeführt werden.
+
+
+\subsection{Vollautomatisieren aller Schritte}
+\subsection{incron}
+
+Das Abspeichern der Daten funktioniert bereits voll automatisiert und jeweils auch in eine extra Datei pro Session. Allerdings muss das Convertierungs-Skript noch automatisch getriggert bzw. ausgeführt werden. Hierfür kann das Linux-Tool "Incron" genutzt werden. Das Tool setzt auf das Kernel-Subsystem Inotify, um auf Dateisystem-Ereignisse zu reagieren. Dadurch kann ein Ordner überwacht werden und bei einer neuen Datei etwas getriggert werden, wie z.B. eben die Ausführung des Konvertierungs-Skriptes. Incron ähnelt dabei in der Handhabung an das Standardwerkzeug "Cron", welches Cron Jobs auf Basis von Zeitpunkten startet.
+
+\begin{lstlisting}
+echo ">>installing incron if not already installed.."
+if ! which "incrond" > /dev/null
+then
+	sudo apt-get install -y incron
+fi
+echo ""
+echo ""
+
+echo ">>YOU have to do that manually:"
+echo ">>append your username into '/etc/incron.allow'"
+
+echo ">>starting service with 'systemctl start incron.service'"
+
+echo ">>add job with 'incrontab -e' and append following line:"
+echo "/home/all/wiresharkCalls IN_CLOSE_WRITE /home/all/startPcap2wavgsmConversion.sh \$@ \$#"
+echo ""
+\end{lstlisting}
+
+Nun werden also die Daten direkt von der Schnittstelle abgegriffen, gefiltert und gespeichert. Danach automatisch in .wav konvertiert, sodass die Gespräche lokal auf dem PC angehört werden können. Um nicht an den lokalen PC gebunden zu sein, wäre es möglich die Dateien über einen Webserver global zur Verfügung zu stellen.
+
+
+\subsection{Weiteres Feature}
+Es soll das letzte oder die letzten Gespräche via einem Telefonanruf wiedergegeben werden können. Dies wurde mit einer/mehreren speziell konfigurierten Nummern ermöglicht.
+
+==> kann auch die Nummer beschränkt werden, sodass nur eine registrierte Nummer die Gespräche abhören kann?!???
