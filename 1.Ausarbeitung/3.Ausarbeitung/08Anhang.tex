@@ -86,3 +86,50 @@ network
      phys\_chan\_config TCH/F
      hopping enabled 0
 \end{lstlisting}
+
+\newpage
+\section{osmo-bts.cfg}\label{Osmo-bts.cfg}
+\begin{lstlisting}
+!
+! OsmoBTS () configuration saved from vty
+!!
+!
+log stderr
+  logging color 1
+  logging timestamp 0
+  logging level rsl info
+  logging level oml info
+  logging level rll notice
+  logging level rr notice
+  logging level meas notice
+  logging level pag info
+  logging level l1c info
+  logging level l1p info
+  logging level dsp info
+  logging level abis notice
+!
+line vty
+ no login
+!
+phy 0
+ instance 0
+ osmotrx rx-gain 1
+ osmotrx ip local 127.0.0.1
+ osmotrx ip remote 127.0.0.1
+bts 0
+ band PCS1900
+ ipa unit-id 1901 0
+ oml remote-ip 127.0.0.1
+ paging lifetime 0
+ gsmtap-sapi bcch
+ gsmtap-sapi ccch
+ gsmtap-sapi rach
+ gsmtap-sapi agch
+ gsmtap-sapi pch
+ gsmtap-sapi sdcch
+ gsmtap-sapi pacch
+ gsmtap-sapi pdtch
+ gsmtap-sapi sacch
+ trx 0
+  phy 0 instance 0
+\end{lstlisting}
