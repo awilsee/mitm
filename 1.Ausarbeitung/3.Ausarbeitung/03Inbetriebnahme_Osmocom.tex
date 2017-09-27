@@ -38,9 +38,81 @@ make install
 sudo ldconfig
 \end{lstlisting}
 
-Trotz der sorgfältigen Installation einiger Softwarevoraussetzungen traten zusätzliche Abhängigkeiten bei der Installation einzelner GSM Komponenten auf, welche in \ref{GSM_Komp} beschrieben sind.
+Trotz der sorgfältigen Installation einiger Softwarevoraussetzungen traten zusätzliche Abhängigkeiten bei der Installation einzelner GSM Komponenten auf, welche in \ref{GSM_Komp_Osmocom} beschrieben sind.
 
-\subsection{Installation einzelner GSM Komponenten}\label{GSM_Komp}
+\subsubsection{Aktivierung der Verbindung zum USRP2}
+Vor Installation des Treibers sollte zunächst die Netzwerkschnittstelle wie folgt aktiviert werden. Die default IP Adresse des Ettus USRP2 ist 192.168.10.2. 
+
+\begin{lstlisting}
+sudo ifconfig enp0s25 192.168.10.3
+ping 192.168.10.2
+\end{lstlisting}
+
+\subsection{Installation einzelner GSM Komponenten}\label{GSM_Komp_Osmocom}
 OsmocomBB hält detaillierte Beschreibungen zur Installation der GSM Komponenten bereit, welche zur Inbetriebnahme des in Rahmen dieser Arbeit verwendeten GSM Netzes herangezogen wurden. Im Folgenden wird die Installation und Einrichtung der GSM Komponenten genauer erläutert. 
-\subsubsection{Openggsn}
+
+\subsubsection{OsmoTRX}
+Zur Kommunikation mit der Basisstation ist der osmoTRX Treiber nötig. Osmocom bietet diesen - meist wie die anderen Komponenten - im Git Repository an. Die Installation des Treibers erforderte die Bibliotheken \textit{$libusb-1.0-0-dev$, $uhd-host$, $libboost-dev$} und \textit{$libuhd-dev$}. Diese bieten die Suchfunktion \textit{uhd\_find\_devices}. Dadurch lässt sich testen, ob die Basisstation gefunden wird. Mittels \textit{osmo-trx} lässt sich der Treiber nach der Installation starten.
+
+\begin{lstlisting}
+git clone git://git.osmocom.org/osmo-trx
+cd osmo-trx/
+autoreconf -i
+./configure
+sudo make -j8
+sudo make install
+osmo-trx	
+\end{lstlisting}
+
+Zur Behebung der Warnung, die in Abbildung \ref{fig:UHDWarnung} zu sehen ist, wurde die Priorität in der Datei /etc/security/limits.conf gesetzt.
+
+\begin{lstlisting}
+@usrp   -  rtprio  50
+\end{lstlisting}
+
+\begin{figure}[h] %t=top b=bottom h=here p =eigene page
+\centering
+\includegraphics[width=15cm]{includes/uhd_usrp_warnung}
+\caption{Fehlermeldung bezüglich der Thread Priorität in osmoTRX}
+\label{fig:UHDWarnung}
+\end{figure}
+
+\subsubsection{OsmoBTS}
+Die Installation von OsmoBTS erfolgte analog zur Einrichtung der anderen Osmocom Komponenten.
+
+\begin{lstlisting}
+git clone git://git.osmocom.org/osmo-bts.git
+autoreconf -fi
+cd osmo-bts
+./configure
+sudo make -j8
+sudo make install
+\end{lstlisting}
+
+Zur Konfiguration wurden zunächst die Pfade der folgenden Variablen angepasst.
+
+\begin{lstlisting}
+PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"
+PKG_CONFIG_PATH="/home/netpc06/libosmo-abis/"
+LIBOSMOTRAU_CFLAGS="/home/netpc06/libosmo-abis/"
+LIBOSMOTRAU_LIBS="/home/netpc06/libosmo-abis/"
+\end{lstlisting}
+
+\subsubsection{OpenBSC}
+Weiterhin wurde OpenBSC installiert. Dazu wurde die Bibliothek libssl-dev (eigentlich unter libcrypto bekannt) vorausgesetzt.
+
+\begin{lstlisting}
+sudo apt-get install libssl-dev
+git clone git://git.osmocom.org/openbsc
+cd openbsc/
+cd openbsc/openbsc/
+autoreconf -i
+./configure 
+sudo make -j8
+sudo make install
+\end{lstlisting}
+
+Zur Konfiguration von OpenBSC wurde eine Beispieldatei wie folgt angepasst (siehe Anhang \ref{Openbsc.cfg}). \textit{short name} und \textit{long name} beschreiben den Name des Netzwerks und wurden umbenannt. Die Option \textit{auth policy} wurde auf \textit{accept-all} gesetzt, um alle
+
+
 \subsection{Starten des Systems}

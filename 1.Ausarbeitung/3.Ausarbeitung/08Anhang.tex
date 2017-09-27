@@ -1,0 +1,88 @@
+\section{openbsc.cfg} \label{Openbsc.cfg}
+\begin{lstlisting}
+!
+! OpenBSC configuration saved from vty
+!   !
+password foo
+!
+line vty
+ no login
+!
+e1\_input
+ e1\_line 0 driver ipa
+ e1\_line 0 port 0
+network
+ network country code 262
+ mobile network code 99
+ short name mitm2
+ long name mitm2
+ auth policy accept-all
+ location updating reject cause 13
+ encryption a5 0
+ neci 1
+ paging any use tch 0
+ rrlp mode ms-based
+ mm info 1
+ handover 0
+ handover window rxlev averaging 10
+ handover window rxqual averaging 1
+ handover window rxlev neighbor averaging 10
+ handover power budget interval 6
+ handover power budget hysteresis 3
+ handover maximum distance 9999
+ timer t3101 10
+ timer t3113 60
+ timer t3122 10
+ dtx-used 0
+ subscriber-keep-in-ram 0
+ bts 0
+  type sysmobts
+  band PCS1900
+  cell\_identity 0
+  location\_area\_code 1
+  training\_sequence\_code 7
+  base\_station\_id\_code 63
+  ms max power 0
+  cell reselection hysteresis 4
+  rxlev access min 0
+  periodic location update 30
+  channel allocator descending
+  rach tx integer 9
+  rach max transmission 7
+  channel-descrption attach 1
+  channel-descrption bs-pa-mfrms 5
+  channel-descrption bs-ag-blks-res 1
+  ip.access unit\_id 1901 0
+  oml ip.access stream\_id 255 line 0
+  neighbor-list mode automatic
+  trx 0
+   rf\_locked 0
+   arfcn 806
+   nominal power 0
+   max\_power\_red 0
+   rsl e1 tei 0
+    timeslot 0
+     phys\_chan\_config CCCH+SDCCH4
+     hopping enabled 0
+    timeslot 1
+     phys\_chan\_config TCH/F
+     hopping enabled 0
+    timeslot 2
+     phys\_chan\_config TCH/F
+     hopping enabled 0
+    timeslot 3
+     phys\_chan\_config TCH/F
+     hopping enabled 0
+    timeslot 4
+     phys\_chan\_config TCH/F
+     hopping enabled 0
+    timeslot 5
+     phys\_chan\_config TCH/F
+     hopping enabled 0
+    timeslot 6
+     phys\_chan\_config TCH/F
+     hopping enabled 0
+    timeslot 7
+     phys\_chan\_config TCH/F
+     hopping enabled 0
+\end{lstlisting}
