@@ -16,6 +16,14 @@ MitM::MitM(QWidget *parent) :
     connect(ui->pushButtonSipConnector, SIGNAL(clicked()), this, SLOT(sipConnectorPressed()));
     connect(ui->pushButtonWireshark, SIGNAL(clicked()), this, SLOT(wiresharkPressed()));
     connect(ui->pushButtonSQLBrowser, SIGNAL(clicked()), this, SLOT(sqlBrowserPressed()));
+
+
+    connect(ui->pushButtonPcap, SIGNAL(clicked()), this, SLOT(pcapSipDumpPressed()));
+    connect(ui->pushButtonSlot1, SIGNAL(clicked()), this, SLOT(slot1Pressed()));
+    connect(ui->pushButtonSlot2, SIGNAL(clicked()), this, SLOT(slot2Pressed()));
+    connect(ui->pushButtonSlot3, SIGNAL(clicked()), this, SLOT(slot3Pressed()));
+    connect(ui->pushButtonSlot4, SIGNAL(clicked()), this, SLOT(slot4Pressed()));
+    connect(ui->pushButtonSlot5, SIGNAL(clicked()), this, SLOT(slot5Pressed()));
 }
 
 
@@ -35,8 +43,6 @@ MitM::~MitM()
 void MitM::checkInput() {
 
     password = ui->lineEdit->text();
-    //for testing
-    //ui->label->setText(password);
 }
 
 
@@ -51,7 +57,6 @@ void MitM::transceiverPressed(){
 
     if (ui->pushButtonTransceiver->isChecked()) {
 
-        //exec->start("/home/netpc06/test.sh");
         exec->start("./startTransceiver.sh");
         ui->pushButtonTransceiver->setText("Stoppen");
     }
@@ -74,8 +79,6 @@ void MitM::bscPressed(){
 
     if (ui->pushButtonBSC->isChecked()) {
 
-        //exec->start("sudo", QStringList() << "-A" << password << "nautilus");
-        //exec->start("sudo", QStringList() << "-p" << password << "nautilus");
         exec->start("./startOsmoNitb.sh");
         ui->pushButtonBSC->setText("Stoppen");
     }
@@ -99,7 +102,6 @@ void MitM::btsPressed(){
 
     if (ui->pushButtonBTS->isChecked()) {
 
-        //exec->start("sudo", QStringList() << "nautilus");
         exec->start("./startOsmoBTS.sh");
         ui->pushButtonBTS->setText("Stoppen");
     }
@@ -183,4 +185,60 @@ void MitM::sqlBrowserPressed(){
 
 
 
+void MitM::pcapSipDumpPressed(){
 
+    QProcess* exec = new QProcess(this);
+
+    if (ui->pushButtonPcap->isChecked()) {
+
+        exec->start("./startPcapSipDump.sh");
+        ui->pushButtonPcap->setText("Stoppen");
+    }
+    else {
+
+        exec->close();
+        ui->pushButtonPcap->setText("Starten");
+    }
+}
+
+
+
+
+
+void MitM::slot1Pressed(){
+
+    QProcess* exec = new QProcess(this);
+    exec->start("./slot1.sh");
+}
+
+
+
+void MitM::slot2Pressed(){
+
+    QProcess* exec = new QProcess(this);
+    exec->start("./slot2.sh");
+}
+
+
+
+void MitM::slot3Pressed(){
+
+    QProcess* exec = new QProcess(this);
+    exec->start("./slot3.sh");
+}
+
+
+
+void MitM::slot4Pressed(){
+
+    QProcess* exec = new QProcess(this);
+    exec->start("./slot4.sh");
+}
+
+
+
+void MitM::slot5Pressed(){
+
+    QProcess* exec = new QProcess(this);
+    exec->start("./slot5.sh");
+}

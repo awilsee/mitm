@@ -36,6 +36,14 @@ public slots:
     void sipConnectorPressed();
     void sqlBrowserPressed();
 
+
+    void pcapSipDumpPressed();
+    void slot1Pressed();
+    void slot2Pressed();
+    void slot3Pressed();
+    void slot4Pressed();
+    void slot5Pressed();
+
 };
 
 #endif // MITM_H
