@@ -5,19 +5,36 @@ Für Inbetriebnahme des GSM Netzes waren einige Vorinstallationen sowie das Einr
 \subsection{Vorinstallationen}
 
 \subsubsection{Ubuntu 16.04.3}
-
-Verweis machen, wenn wie bei Osmocom
+Zunächst wurde wie bei der Installation von Osmocom das Betriebssystem Ubuntu 16.04.3 auf einem Labor-Rechner installiert und eingerichtet.
 
 \subsubsection{Git}
+Auch Range Networks nutzt für OpenBTS Git-Repositories, weshalb auch für die Installation von OpenBTS zunächst Git eingerichtet wurde. Zur Versionskontrolle und Verwaltung des Codes wurde auch hier das Team-interne Git Repository genutzt.
 
-Verweis machen, wenn wie bei Osmocom
+\begin{lstlisting}
+sudo apt-get install git
+\end{lstlisting}
 
 \subsubsection{Softwarevoraussetzungen}
+Um OpenBTS fehlerfrei installieren und in Betrieb nehmen zu können, wurden zunächst einige Bibliotheken und Pakete via Paketmanager installiert, um die vorausgesetzten Abhängigkeiten zu erfüllen:
+\begin{lstlisting}
+sudo apt-get install autoconf libtool libosip2-dev libortp-dev libusb-1.0-0-dev g++ sqlite3 libsqlite3-dev erlang libreadline6-dev libncurses5-dev
+\end{lstlisting}
 
-selbst
+\subsubsection{Aktivierung der Verbindung zum USRP2}
+Nachdem wir in Kapitel~\ref{usrp2_connect} die IP-Adresse des N210 erfolgreich zurücksetzen konnten, mussten wir in diesem Fall nur eine Verbindung zum USRP2-Gerät aufnehmen, indem wir die IP-Adresse des PCs innerhalb des gleichen Netzwerkbereichs setzten.
+
+\begin{lstlisting}
+sudo ifconfig enp0s25 192.168.10.3
+\end{lstlisting}
+
+Dieses mal konnten wir mithilfe der automatischen Erkennungsfunktion direkt erkennen, dass eine Verbindung zum N210 bestand.
+\begin{lstlisting}
+uhd_find_devices
+\end{lstlisting}
+
+Da uns im Laufe des Projekts die IP-Adresse der Schnittstelle am PC immer wieder zurückgesetzt wurde, speicherten wir die IP-Adresse daraufhin direkt in den Netzwerkeinstellungen.
 
 \subsection{Installation einzelner GSM Komponenten}\label{GSM_Komp}
-
-selbst 
+Range Networks stellt eine detaillierte Anleitung zur Installation von OpenBTS inklusive aller zuvor beschriebenen Komponenten bereit, die zur Inbetriebnahme eines GSM-Netzes benötigt werden. Im Folgenden werden die Schritte zur Umsetzung auf der uns vorgelegenen Hardware genauer beschrieben.
 
 \subsection{Starten des Systems}

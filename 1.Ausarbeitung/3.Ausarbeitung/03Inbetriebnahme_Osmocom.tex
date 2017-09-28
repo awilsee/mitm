@@ -40,12 +40,44 @@ sudo ldconfig
 
 Trotz der sorgfältigen Installation einiger Softwarevoraussetzungen traten zusätzliche Abhängigkeiten bei der Installation einzelner GSM Komponenten auf, welche in \ref{GSM_Komp_Osmocom} beschrieben sind.
 
-\subsubsection{Aktivierung der Verbindung zum USRP2}
-Vor Installation des Treibers sollte zunächst die Netzwerkschnittstelle wie folgt aktiviert werden. Die default IP Adresse des Ettus USRP2 ist 192.168.10.2. 
+\subsubsection{Aktivierung der Verbindung zum USRP2}\label{usrp2_connect}
+Vor Installation des Treibers sollte zunächst die Netzwerkschnittstelle aktiviert werden. Die Default IP-Adresse des Ettus USRP2 ist 192.168.10.2. Dafür mussten wir zuerst erfahren, welche Bezeichnung die für den Ettus USRP2 verwendete Schnittstelle nutzt.
+\begin{lstlisting}
+sudo ifconfig
+\end{lstlisting}
 
+Daraufhin konnten wir die IP-Adresse der Schnittstelle am PC so setzen, dass es möglich sein sollte mit dem Ettus USRP2 zu kommunizieren.
 \begin{lstlisting}
 sudo ifconfig enp0s25 192.168.10.3
 ping 192.168.10.2
+\end{lstlisting}
+
+Allerdings war zunächst keine Kommunikation mit dem USRP2 möglich, deshalb versuchten wir das Gerät zu finden, indem wir den kompletten IP-Bereich des Netzwerks anpingten sowie die automatische Suchfunktion von UHD-Geräten nutzten.
+\begin{lstlisting}
+nmap -sP 192.168.10.0/24 | grep -oE '([[:digit:]]{1,3}\.){3}[[:digit:]]{1,3}'
+uhd_find_devices
+\end{lstlisting}
+
+Nachdem auch diese beiden Befehle zu keinem Erfolg führten und das Gerät auch in anderen IP-Netzbereichen nicht gefunden werden konnte, brachten wir den N210 in den Safe-Mode, in welchem es immer die IP-Adresse 192.168.10.2 besitzt. Dafür mussten wir den N210 aufschrauben und den Safe-Mode Knopf (S2) im Inneren drücken und bis zum erfolgreichen Neustart gedrückt halten. Nun konnten wir das Image des N210 aktualisieren und gleichzeitig die IP-Adresse außerhalb des Safe-Modes auf 192.168.10.2 setzen.
+\begin{lstlisting}
+uhd_image_loader --args="type=usrp2,addr=192.168.10.2, reset"
+sudo /usr/lib/uhd/utils/usrp2_recovery.py --ifc=enp0s25 --new-ip=192.168.10.2
+\end{lstlisting}
+
+Die automatische Suchfunktion zeigte nun endlich auch im normalen Modus eine Verbindung.
+\begin{lstlisting}
+uhd_find_devices
+
+linux; GNU C++ version 5.3.1 20151219; Boost_105800; UHD_003.009.002-0-unknown
+
+--------------------------------------------------
+-- UHD Device 0
+--------------------------------------------------
+Device Address:
+    type: usrp2
+    addr: 192.168.10.2
+    name: 
+    serial: F449BF
 \end{lstlisting}
 
 \subsection{Installation einzelner GSM Komponenten}\label{GSM_Komp_Osmocom}
