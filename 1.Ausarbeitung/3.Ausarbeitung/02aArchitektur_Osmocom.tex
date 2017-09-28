@@ -75,4 +75,16 @@ In der Standardeinstellung von OsmoNITB werden Steuerungssignale von der BTS an 
 \end{figure}
 
 
-Weiterhin läuft auf unseren System die Telefonanlage Asterisk. Sie ist mittels Osmocom-Sip-Connector an OsmoNITB angeschlossen. Dieser generiert aus dem MNCC-Datenstrom aus OsmoNITB einen SIP-Datenstrom (Session Initiation Protocol).
+Weiterhin läuft auf unseren System die Telefonanlage Asterisk. Sie ist mittels Osmocom-Sip-Connector an OsmoNITB angeschlossen. Dieser generiert aus dem MNCC-Datenstrom, dem klassischen Anrufsteuerungsprotokoll von ISDN, aus OsmoNITB einen SIP-Datenstrom (Session Initiation Protocol). Mit Hilfe dieses Sitzungsprotokolls kann ein Gespräch für die Man-in-the-middle-Attacke abgefangen werden. Insgesamt ergibt sich somit für unser System folgender Aufbau:
+
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=14cm]{includes/aufbau_osmonitb}
+    \caption{Unser Systemaufbau}
+	\label{fig:osmonitb3}
+\end{figure}
+
+
+Der Datenabgriff erfolgt in unserem Fall an der Stelle des schwarzen Balkens (s. Bild oben). Wird ein Gespräch aufgebaut, so signalisiert SIP dieses und der RTP-Stream kann abgefangen werden.
