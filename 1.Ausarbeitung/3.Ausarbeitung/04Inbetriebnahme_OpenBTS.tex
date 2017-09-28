@@ -133,13 +133,22 @@ Da wir OpenBTS zunächst ohne vorherige Anpassung der Einstellungen am Radioband
 ALERT 2577:2596 2017-09-14T13:49:16.0 Transceiver.cpp:414:pullRadioVector: Clipping detected on RACH input
 \end{lstlisting}
 
+Damit waren die Grundeinstellungen für den Betrieb von OpenBTS gesetzt.
+
+\subsubsection{Asterisk Einstellungen}
 Da bei uns die Konfigurationsdateien von Asterisk nicht bei jeder Neuinstallation aktualisiert wurden, haben wir diese teilweise manuell zurückgesetzt.
 \begin{lstlisting}
 #(vom OpenBTS root)
 sudo cp asterisk-config/* /etc/asterisk
 \end{lstlisting}
 
-Damit waren die Grundeinstellungen für den Betrieb von OpenBTS gesetzt.
+Nach Änderungen an den Konfigurationsdateien musste Asterisk neu gestartet werden bevor die Änderungen in Kraft getreten sind.
+\begin{lstlisting}
+#(vom Userverzeichnis)
+sudo ./asterisk -r			//so kann die CLI von Asterisk genutzt werden
+sudo restart gracefully
+\end{lstlisting}
+
 
 \subsection{Starten des Systems}
 Nach Installation aller Komponenten wurde das System gestartet. Die Reihenfolge spielt hierbei keine Rolle, da der Transceiver selbstständig von OpenBTS gestartet wird und alle Dienste über verschiedene Ports miteinander kommunizieren.\\
@@ -165,29 +174,28 @@ sudo ./asterisk
 Beim Start der verschiedenen Komponenten wurden uns folgende Zeilen ausgegeben.\\
 \begin{figure}[htbp]
 	\centering
-		\includegraphics[width=0.90\textwidth]{includes/Start_sipauthserve}
+		\includegraphics[width=1.00\textwidth]{includes/Start_sipauthserve}
 	\caption{Ansicht der Konsole nach dem Start von SIPAuthServe}
 	\label{fig:start_sipauthserve}
 \end{figure}
 
 \begin{figure}[htbp]
 	\centering
-		\includegraphics[width=0.90\textwidth]{includes/Start_smqueue}
+		\includegraphics[width=1.00\textwidth]{includes/Start_smqueue}
 	\caption{Ansicht der Konsole nach dem Start von SMQueue}
 	\label{fig:start_smqueue}
 \end{figure}
 
 \begin{figure}[htbp]
 	\centering
-		\includegraphics[width=0.90\textwidth]{includes/Start_asterisk}
+		\includegraphics[width=1.00\textwidth]{includes/Start_asterisk}
 	\caption{Ansicht der Konsole nach dem Start von Asterisk}
 	\label{fig:start_asterisk}
 \end{figure}
 
-\newpage
 \begin{figure}[htbp]
 	\centering
-		\includegraphics[width=0.70\textwidth]{includes/Start_OpenBTS}
+		\includegraphics[width=1.00\textwidth]{includes/Start_OpenBTS}
 	\caption{Ansicht der Konsole nach dem Start von OpenBTS}
 	\label{fig:start_OpenBTS}
 \end{figure}
@@ -217,11 +225,22 @@ Nach erfolgreicher Anmeldung im Testnetz erhielten wir sofort eine Nachricht von
 	\label{fig:asterisk_sipbuddies}
 \end{figure}
 
-Das Senden von Nachrichten an verschiedene Teilnehmer im Netzwerk funktionierte schon von Beginn an einwandfrei. Nachdem wir die richtigen Einstellungen für Asterisk gefunden hatten, funktionierten sowohl Anrufe zu Testnummern, als auch zwischen den Teilnehmern. In Asterisk wurde nach einem Anruf eine Nachricht ausgegeben, die folgendermaßen aussah.
+Das Senden von Nachrichten an verschiedene Teilnehmer im Netzwerk funktionierte schon von Beginn an einwandfrei. Daraufhin testeten wir einige der Nummern zu Testzwecken wie die des Echo-Calls. Diese Funktion wurde durch folgenden Code in den Asterisk-Einstellungen der extensions.conf umgesetzt.
+\begin{lstlisting}
+[default](+)
+...
+exten => 2600,		1,Set(CDR(hangupdirection)=A)
+same =>				n,Answer() 
+same =>				n,Echo()
+same =>				n,Set(CDR(hangupdirection)=SYSTEM)
+same =>				n,Hangup(16)
+...
+\end{lstlisting}
 
+Es dauerte eine Weile bis wir die richtigen Einstellungen für Asterisk gefunden hatten, sodass sowohl Anrufe zu Testnummern, als auch zwischen den Teilnehmern funktionierten. In Asterisk wurde nach einem Anruf ein Mitteilung ausgegeben, die folgendermaßen aussah und in der die IMSIs sowie Mobilfunknummern beider Teilnehmer aufgeführt wurden.
 \begin{figure}[htbp]
 	\centering
-		\includegraphics[width=0.9\textwidth]{includes/asterisk_call}
+		\includegraphics[width=1.0\textwidth]{includes/asterisk_call}
 	\caption{Ausgabe in Asterisk nach Beenden eines Anrufs zwischen Mobilfunkteilnehmern}
 	\label{fig:asterisk_call}
 \end{figure}
