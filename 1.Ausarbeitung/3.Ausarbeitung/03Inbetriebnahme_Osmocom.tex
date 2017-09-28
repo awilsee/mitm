@@ -64,6 +64,13 @@ sudo make install
 osmo-trx	
 \end{lstlisting}
 
+\begin{figure}[h] %t=top b=bottom h=here p =eigene page
+\centering
+\includegraphics[width=15cm]{includes/Start_Transceiver}
+\caption{Ansicht der Konsole nach dem Start des Transceivers}
+\label{fig:Transceiver}
+\end{figure}
+
 Zur Behebung der Warnung, die in Abbildung \ref{fig:UHDWarnung} zu sehen ist, wurde die Priorität in der Datei /etc/security/limits.conf gesetzt.
 
 \begin{lstlisting}
@@ -119,7 +126,7 @@ sudo make install
 Zur Konfiguration von OpenBSC wurde - analog zu OsmoBTS - eine Beispieldatei wie folgt angepasst (siehe Anhang \ref{Openbsc.cfg}). \textit{short name} und \textit{long name} beschreiben den Name des Netzwerks und wurden umbenannt. Die Option \textit{auth policy} wurde auf \textit{accept-all} gesetzt, um alle Anfrage zur Registrierung im Netz zuzulassen. Andernfalls muss die IMSI der jeweiligen Mobilfunkstation (MS) in der Datenbank des Home Location Registers (HLR) hinterlegt sein. Da der erlaubte Frequenzbereich 1909,0/1989,0 MHz beträgt, wurde die Option \textit{band} auf \textit{PCS1900} gesetzt. Weiterhin wurde die \textit{ipa.unit-id} an die der OsmoBTS angepasst (1901 0). Eine letzte Änderung wurde an der sogenannten Absolute Radio Frequency Channel Number (ARFCN) vorgenommen, die durch die Option \textbf{arfcn} angegeben wird. Dieser ergibt sich wie folgt:
 
 \begin{equation}
-ARFCN = Offset + \frac{f_{up} - f_{Uplink_Start}}{f_{bandbreite}}
+ARFCN = Offset + \frac{f_{up} - f_{UplinkStart}}{f_{bandbreite}}
 \end{equation}
 
 Der oben genannte Frequenzbereich lässt sich auf ein Netzwerk vom Typ PCS1900 zurückführen. Als \textit{Offset} wurde ein Wert von 512 gewählt, der für diesen Frequenzbereich üblich ist. $f_{up}$ wurde auf einen Wert von 1850,2 MHz gesetzt, da dieser der Startwert des Uplinks für das PCS1900 ist. In der Frequenzzuteilung der Bundesnetzagentur wurde eine Bandbreite von 0,2 MHz angegeben. Unter Verwendung dieser Werte ergibt sich ein ARFCN von 806.\\
@@ -128,19 +135,12 @@ Nach Änderung der Konfigurationsdatei openbsc.cfg wurde diese unter dem Pfad \t
 /openbsc/openbsc/src/osmo-nitb} abgelegt.
 
 \subsection{Starten des Systems}
-Nach Installation aller Komponenten wurde das System gestartet. Dabei wurden als Optionen die Pfade der Konfigurationsdateien angeben. Da OsmoBTS den Transceiver fordert, musste dieser als erste Instanz gestartet werden. 
+Nach Installation aller Komponenten wurde das System gestartet. Dabei wurden als Optionen die Pfade der Konfigurationsdateien angeben. Da OsmoBTS den Transceiver fordert, musste dieser als erste Instanz gestartet werden. Die Reihenfolge der weiteren Komponenten spielt keine Rolle. 
 
 \begin{lstlisting}
 // Transceiver starten
 cd /home/netpc06/osmo-trx
 sudo osmo-trx -f
-\end{lstlisting}
-
-Die Reihenfolge der weiteren Komponenten spielt keine Rolle. OsmoBTS wird wie folgt gestartet.
-
-\begin{lstlisting}
-cd /home/netpc06/osmo-bts/src/osmo-bts-trx
-sudo osmo-bts-trx -c osmo-bts.cfg
 \end{lstlisting}
 
 Als Option beim Start von Osmo-Nitb wurden sowohl der Pfad der Konfigurationsdatei als auch der der HRL Datenbank angegeben.
@@ -149,7 +149,76 @@ cd /home/netpc06/openbsc/openbsc/src/osmo-nitb
 osmo-nitb -c /home/netpc06/openbsc/openbsc/src/osmo-nitb/openbsc.cfg -l /home/netpc06/openbsc/openbsc/src/osmo-nitb/hlr.sqlite3 -P -C --debug=DRLL:DCC:DMM:DRR:DRSL:DNM
 \end{lstlisting}
 
-\subsection{Installation weiterer Komponenten}
+\begin{figure}[h] %t=top b=bottom h=here p =eigene page
+\centering
+\includegraphics[width=15cm]{includes/Start_OsmoNitb}
+\caption{Ansicht der Konsole nach dem Start der OsmoNitb}
+\label{fig:OsmoNitb}
+\end{figure}
 
-\subsubsection{Asterisk}
+\newpage
+OsmoBTS wurde wie folgt gestartet.
+
+\begin{lstlisting}
+cd /home/netpc06/osmo-bts/src/osmo-bts-trx
+sudo osmo-bts-trx -c osmo-bts.cfg
+\end{lstlisting}
+
+\begin{figure}[h] %t=top b=bottom h=here p =eigene page
+\centering
+\includegraphics[width=15cm]{includes/Start_OsmoBTS}
+\caption{Ansicht der Konsole nach dem Start der OsmoBTS}
+\label{fig:OsmoBTS}
+\end{figure}
+
+
+\subsection{Installation weiterer Komponenten}
+Neben den Komponenten zur Inbetrienahme des GSM Netzes wurden außerdem weitere Installationen vorgenommen. Diese waren zur Umsetzung des Projektziels notwendig.
+
 \subsubsection{Osmo-sip-Connector}
+Zur Konvertierung von .wav-Dateien werden sowohl RTP als auch SIP Pakete benötigt. Um neben RTP und UDP Paketen auch SIP Pakete abfangen zu können, wurde der Osmo-sip-Connector wie folgt installiert.
+
+\begin{lstlisting}
+git clone git://git.osmocom.org/osmo-sip-connector.git
+cd osmo-sip-connector/
+autoreconf -fi
+./configure
+make
+sudo make install
+\end{lstlisting} 
+
+Nach erfolgreicher Installation des Osmo-sip-connectors wurde mit Angabe der Konfigurationsdatei gestartet.
+
+\begin{lstlisting}
+osmo-sip-connector -c ./osmo-sip-connector.cfg
+\end{lstlisting} 
+
+\begin{figure}[h] %t=top b=bottom h=here p =eigene page
+\centering
+\includegraphics[width=15cm]{includes/Start_SipConnector}
+\caption{Ansicht der Konsole nach dem Start des Osmo-sip-connectors}
+\label{fig:Asterisk}
+\end{figure}
+ 
+\subsubsection{Asterisk}
+Den Aufbau von Gesprächen sowie deren Vermittlung wurde in dieser Arbeit der PBX Asterisk verwendet. Dieser wurde über den Paketmanager installiert. Die Einrichtung erforderte die Installation der Bibliothek libsofia-sip-ua-glib-dev.
+
+\begin{lstlisting}
+sudo apt-get install asterisk
+\end{lstlisting}
+
+Nach der Installation startet Asterisk selbständig. Da mehrmals Änderungen an den Konfigurationsdateien von Asterisk vorgenommen wurden, wurde Asterisk mehrmals neu gestartet.
+
+\begin{lstlisting}
+core restart gracefully
+sudo asterisk -r
+\end{lstlisting}
+
+Nach mehreren Fehlschlägen bezüglich der Installation von Asterisk und folglicher Neuaufsetzen des gesamten Systems inklusive des Betriebssystems wurde Asterisk als erste Komponente vor der GSM Installation eingerichtet. Es stellte sich heraus, dass dieses Vorgehen zu einer erfolgreichen Installation von Asterisk und Inbetriebnahme des GSM Netzes führte.
+
+\begin{figure}[h] %t=top b=bottom h=here p =eigene page
+\centering
+\includegraphics[width=15cm]{includes/Asterisk}
+\caption{Ansicht der Konsole nach Verbindung mit Asterisk}
+\label{fig:Asterisk}
+\end{figure}
