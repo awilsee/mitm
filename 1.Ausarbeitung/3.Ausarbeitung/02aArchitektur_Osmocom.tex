@@ -8,7 +8,7 @@ Bei OsmoNITB handelt es sich um ein freies Softwarepacket aus dem Osmocom-Baseba
 
 
 \begin{itemize}
-\item MSC//VLR\\
+\item MSC\/VLR\\
 \item SMSC\\
 \item EIR\\
 \item HLR//AUC\\
@@ -39,7 +39,7 @@ Bei OsmoNITB handelt es sich um ein freies Softwarepacket aus dem Osmocom-Baseba
 Hierbei handelt es sich wie bereits oben erwähnt um den Basisstationcontroller. Er überwacht eine Mobilfunkverbindung und regelt die Leistung nach. Zudem lösst er einen Zellenwechsel, dem sogenannten Handover aus. OsmoNITB nutzt hierzu die freie Implementierung OpenBSC.  
 
  
-\item \textbf{MSC//VLR}\\
+\item \textbf{MSC\/VLR}\\
 Die Mobile-service switching center stellt im GSM/GPRS-Netz die Vermittlungsstelle dar. Sie übernimmt die Anrufverwaltung, die Verwaltung der Authentifizierung und innerhalb eines kommerziellen Netzes auch die Gebührenerfassung. Das Visitor Location Register (VLR) würde zudem, die jeweilige Basisstation unter der ein Endgerät eingebucht ist oder zuletzt war, verwalten. Sie kennt damit den Ort des Mobilfunknutzers. Unser Projekt wird jedoch nur mit einer Basisstation durchgeführt, weshalb kein Handover nötig ist. Damit verbleibt das Mobiltelefon nur in einer Location. 
 
 
@@ -51,7 +51,7 @@ Der SMSC ist ein Server für SMS-Dienste. Er kümmert sich um die Verarbeitung v
 Dies ist ein optionales Modul und wird nicht zwingend für den Betrieb eines GSM-Netzes benötig. Dabei handelt es sich um ein Equipment Identity Register (EIR). Hier werden die weltweit eindeutigen Seriennummern der Mobilgeräte (IMEI, International Mobile Equipment Identity) gespeichert. Ziel dieser Datenbank ist ein Sperren verlorener oder gestohlener Endgeräte zu ermöglichen. Auch sie wird in diesen Projekt nicht benötigt. Zudem verwenden auch im kommerziellen Betrieb nur wenige Mobilfunkbetreiber dieses, da die IMEIs oftmals verändert werden können und die Datenbank damit wirkungslos ist.  
 
 
-\item \textbf{HLR//AUC}\\
+\item \textbf{HLR\/AUC}\\
 HLR steht für Home Location Register und bildet die Datenbank in der die Nummer eine Mobiltelefons zu dessen eindeutigen Identifiers, der IMSI (International Mobile Subscriber Identity), hinterlegt ist. Zudem wird hier die TMSI aufgelöst. Eine temporäre IMSI, die den Nutzer eines Mobilgeräts durch Zuweisen einer veränderlichen Identifiers, besser vor Tracking schützen soll. Das Authentification Center (AUC) ist die Authentifizierungszentrale und damit der Ort, an dem der Authentifizierungsschlüssel Ki abgelegt ist. Hier wird die Authentifizierung der SIM-Karte gegenüber dem Mobilfunknetz durchgeführt. 
 
 
