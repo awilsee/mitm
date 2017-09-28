@@ -27,6 +27,8 @@ cp startPcap2wavgsmConversion.sh $HOMEPATH/.
 chmod a=rwx $HOMEPATH/startPcap2wavgsmConversion.sh
 cp pcap2wavgsm.sh $HOMEPATH/.
 chmod a=rwx $HOMEPATH/pcap2wavgsm.sh
+cp slots $HOMEPATH/.
+chmod a=rw $HOMEPATH/slots
 echo ""
 
 echo ">>checking dependencies "
