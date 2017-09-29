@@ -5,6 +5,8 @@ Eine OpenBTS-Installation besteht dabei aus mehreren Softwarepaketen, welche die
 
 
 \subsection{Aufbau und Zusammenspiel}
+Dieses Kapitel beschreibt zunächst die einzelnen Komponenten in der OpenBTS Architektur und deren Interaktion zueinander. Des Weiteren werden die Datenbanken, die ebenfalls teil der Infrastruktur sind, näher erläutert.
+
 \subsubsection{Bestandteile}
 
 Das vollständige OpenBTS-System beinhaltet zum Zeitpunkt des Projekts die folgenden Software-Komponenten:
@@ -30,10 +32,11 @@ Um eine Gesprächsvermittlung im Mobilfunknetz realisieren zu können, wird ein 
 SIPAuthserve verwaltet eine Subscriber Registry Datenbank, die die Teilnehmer-Informationen der im Netz registrierten Endgeräte enthält - unter anderem IMSI und Rufnummer. Diese Datenbank dient als Ersatz für das Home Location Register (HLR) eines klassischen GSM-Netzes sowie die SIP Registry von Asterisk.
 
 \item \textbf{SMQueue}\\
-SMQueue ist ein RFC-3428 Store-and-Forward Message Service für die Übertragung und Speicherung von SMS-Nachrichten. Es verfügt über einen Shortcode-Handler, welcher es ermöglicht den Inhalt von Textnachrichten als Eingabeargumente zu nutzen. So beinhaltet SMQueue standardmäßig einen Registrierungsprozess, der Benutzern dabei hilft eine gewünschte Rufnummer zu registrieren.
+SMQueue ist ein RFC-3428 Store-and-Forward Message Service für die Übertragung und Speicherung von SMS-Nachrichten. Er verfügt über einen Shortcode-Handler, welcher ermöglicht den Inhalt von Textnachrichten als Eingabeargumente zu nutzen. So beinhaltet SMQueue standardmäßig einen Registrierungsprozess, der Benutzern dabei hilft eine gewünschte Rufnummer zu registrieren.
 \end{itemize}
 
-Die Beziehungen und Verbindungsprotokolle aller Komponenten eines OpenBTS-Systems werden in Abbildung\ref{fig:openbts} dargestellt. Dabei repräsentieren eckige Boxen Hardware-Komponenten, abgerundete Boxen Software-Komponenten.
+Die Beziehungen und Verbindungsprotokolle aller Komponenten eines OpenBTS-Systems werden in Abbildung \ref{fig:openbts} dargestellt. Dabei repräsentieren eckige Boxen Hardware-Komponenten, wohingegen abgerundete Boxen Software-Komponenten darstellen.
+
 \begin{figure}[htbp]
 	\centering
 		\includegraphics[width=1.00\textwidth]{includes/openbts}

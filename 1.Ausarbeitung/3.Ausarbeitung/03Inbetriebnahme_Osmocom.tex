@@ -3,10 +3,14 @@
 Für Inbetriebnahme des GSM Netzes waren einige Vorinstallationen sowie das Einrichten von Ubuntu 16.04.3 nötig. Im Folgenden wird das Vorgehen zur Einrichtung des Systems sowie die Inbetriebnahme des GSM Netzes beschrieben.
 
 \subsection{Vorinstallationen}
+Dieses Kapitel behandelt die für die Installation und Inbetriebnahme notwendigen Softwarevoraussetzungen.
 
-\subsubsection{Ubuntu 16.04.3}
-Zunächst wurde das Betriebssystem Ubuntu 16.04.3 auf einem Labor-Rechner installiert und eingerichtet.
-
+\subsubsection{Ubuntu 16.04.3}\label{ubuntu}
+Zunächst wurde wie bei der Installation von Osmocom das Betriebssystem Ubuntu 16.04.3 auf einem Labor-Rechner installiert und eingerichtet. Zusätzlich wurden alle Programme und Pakete mit den folgenden Befehlen aktualisiert.
+\begin{lstlisting}
+sudo apt-get update
+sudo apt-get upgrade
+\end{lstlisting}
 \subsubsection{Git}
 Da die Open-Source Projekte von OsmocomBB auf Git-Repositories liegen, wurde zunächst Git eingerichtet. Zur Versionskontrolle und Verwaltung des Codes wurde außerdem ein Team-eigenes Git Repository angelegt.
 
@@ -142,7 +146,7 @@ Weiterhin erforderte die Konfiguration von OsmoBTS Änderungen an der Datei osmo
 Die Konfigurationsdatei wurde unter dem Pfad \textit{/home/netpc06/osmo-bts/src/osmo-bts-trx} abgelegt. 
 
 \subsubsection{OsmoNitb unter OpenBSC}
-Weiterhin wurde OpenBSC installiert. Dazu wurde die Bibliothek libssl-dev (eigentlich unter libcrypto bekannt) vorausgesetzt.
+Weiterhin wurde OpenBSC installiert. Dazu wurde die Bibliothek \textit{libssl-dev} (eigentlich unter \textit{libcrypto} bekannt) vorausgesetzt.
 
 \begin{lstlisting}
 sudo apt-get install libssl-dev
@@ -155,7 +159,7 @@ sudo make -j8
 sudo make install
 \end{lstlisting}
 
-Zur Konfiguration von OpenBSC wurde - analog zu OsmoBTS - eine Beispieldatei wie folgt angepasst (siehe Anhang \ref{Openbsc.cfg}). \textit{short name} und \textit{long name} beschreiben den Name des Netzwerks und wurden umbenannt. Die Option \textit{auth policy} wurde auf \textit{accept-all} gesetzt, um alle Anfrage zur Registrierung im Netz zuzulassen. Andernfalls muss die IMSI der jeweiligen Mobilfunkstation (MS) in der Datenbank des Home Location Registers (HLR) hinterlegt sein. Da der erlaubte Frequenzbereich 1909,0/1989,0 MHz beträgt, wurde die Option \textit{band} auf \textit{PCS1900} gesetzt. Weiterhin wurde die \textit{ipa.unit-id} an die der OsmoBTS angepasst (1901 0). Eine letzte Änderung wurde an der sogenannten Absolute Radio Frequency Channel Number (ARFCN) vorgenommen, die durch die Option \textbf{arfcn} angegeben wird. Dieser ergibt sich wie folgt:
+Zur Konfiguration von OpenBSC wurde - analog zu OsmoBTS - eine Beispieldatei wie folgt angepasst (siehe Anhang \ref{Openbsc.cfg}). \textit{short name} und \textit{long name} beschreiben den Name des Netzwerks und wurden umbenannt. Die Option \textit{auth policy} wurde auf \textit{accept-all} gesetzt, um alle Anfrage zur Registrierung im Netz zuzulassen. Andernfalls muss die IMSI der jeweiligen Mobilfunkstation (MS) in der Datenbank des Home Location Registers (HLR) hinterlegt sein. Da der erlaubte Frequenzbereich 1909,0/1989,0 MHz beträgt, wurde die Option \textit{band} auf \textit{PCS1900} gesetzt. Weiterhin wurde die \textit{ipa.unit-id} an die der OsmoBTS angepasst (1901 0). Eine letzte Änderung wurde an der sogenannten Absolute Radio Frequency Channel Number (ARFCN) vorgenommen, die durch die Option \textit{arfcn} angegeben wird. Dieser ergibt sich wie folgt:
 
 \begin{equation}
 ARFCN = Offset + \frac{f_{up} - f_{UplinkStart}}{f_{bandbreite}}
@@ -219,7 +223,7 @@ make
 sudo make install
 \end{lstlisting} 
 
-Nach erfolgreicher Installation des Osmo-sip-connectors wurde mit Angabe der Konfigurationsdatei gestartet.
+Nach erfolgreicher Installation wurde der Osmo-sip-connectors mit Angabe der Konfigurationsdatei gestartet.
 
 \begin{lstlisting}
 osmo-sip-connector -c ./osmo-sip-connector.cfg
@@ -233,7 +237,7 @@ osmo-sip-connector -c ./osmo-sip-connector.cfg
 \end{figure}
  
 \subsubsection{Asterisk}
-Den Aufbau von Gesprächen sowie deren Vermittlung wurde in dieser Arbeit der PBX Asterisk verwendet. Dieser wurde über den Paketmanager installiert. Die Einrichtung erforderte die Installation der Bibliothek libsofia-sip-ua-glib-dev.
+Den Aufbau von Gesprächen sowie deren Vermittlung wurde in dieser Arbeit der PBX Asterisk verwendet. Dieser wurde über den Paketmanager installiert. Die Einrichtung erforderte die Installation der Bibliothek \textit{libsofia-sip-ua-glib-dev}.
 
 \begin{lstlisting}
 sudo apt-get install asterisk
@@ -246,7 +250,7 @@ core restart gracefully
 sudo asterisk -r
 \end{lstlisting}
 
-Nach mehreren Fehlschlägen bezüglich der Installation von Asterisk und folglicher Neuaufsetzen des gesamten Systems inklusive des Betriebssystems wurde Asterisk als erste Komponente vor der GSM Installation eingerichtet. Es stellte sich heraus, dass dieses Vorgehen zu einer erfolgreichen Installation von Asterisk und Inbetriebnahme des GSM Netzes führte.
+Nach mehreren Fehlschlägen bezüglich der Installation von Asterisk und folglichem Neuaufsetzen des gesamten Systems inklusive des Betriebssystems wurde Asterisk als erste Komponente vor der GSM Installation eingerichtet. Es stellte sich heraus, dass dieses Vorgehen zu einer erfolgreichen Installation von Asterisk und Inbetriebnahme des GSM Netzes führte.
 
 \begin{figure}[h] %t=top b=bottom h=here p =eigene page
 \centering
