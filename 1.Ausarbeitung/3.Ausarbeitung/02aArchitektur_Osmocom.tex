@@ -2,17 +2,21 @@
 
 
 \subsection{Was ist OsmoNITB}
-Bei OsmoNITB handelt es sich um ein freies Softwarepacket aus dem Osmocom-Baseband-Projekt. Dessen Zweck ist das Aufspannen und Betreiben eines GSM/ GPRS-Netzes mittels nachgebauter Implementierungen des GSM-Protokolls. OsmoNITB bringt hierfür alle erforderlichen Bestandteile, die sich tiefer im Netz als die Basisstation (BTS) befinden. OsmoNITB übernimmt hierbei die Kommunikation mit der Basisstation. Dies geschieht über das A-bis-Interface, einer standardisierten Schnittstelle für den Datenaustausch zwischen Basisstation und Basisstation-Controller (Base Station Controller, BSC), welches selbst Bestandteil dieses Pakets ist. Neben diesen existieren noch folgende weitere Bestandteile:
+Bei OsmoNITB handelt es sich um ein freies Softwarepacket aus dem Osmocom-Baseband-Projekt. Dessen Zweck ist das Aufspannen und Betreiben eines GSM/ GPRS-Netzes mittels nachgebauter Implementierungen des GSM-Protokolls. OsmoNITB bringt hierfür alle erforderlichen Bestandteile, die sich tiefer im Netz als die Basisstation (BTS) befinden. 
+
+Die Basisstation selbst wird mit OsmoBTS realisiert. Auch sie stammt vom OsmocomBB-Projekt. Die Signale hierfür werden mittels eines Software-Radiomodems (SDR) erzeugt und versendet. Wir verwendeten hierzu den USRP N210 von Ettus Research. Dieser ermöglicht es beliebige Signale bis zu einer Frequenz der Höhe 6GHz zu generieren. Um daraus überhaupt GSM-Signale zu Empfangen oder Senden zu können ist ein Transceiver notwendig. Dieses stammt ebenfalls vom OsmocomBB-Projekt und heißt OsmoTRX. Zwischen OsmoTRX und OsmoBTS werden für deren Kommunikation UDP-Nachrichten ausgetauscht. Die Anbindung dieser wiederum an OsmoNITB erfolgt durch das A-bis-Interface, einem GSM-spezifisches, standadisiertes Protokoll für den Austausch der Gespräche und Signalisierungsdaten. Es wird ebenso mittels einer freien Implementierung von OsmocomBB, namentlich "libosmo-abis" realisiert.  
 
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=15cm]{includes/osmotrx}
+    \caption{GSM Basisstation mit OsmoTRX & OsmoBTS}
+	\label{fig:osmotrx}
+\end{figure}
 
 
-\begin{itemize}
-\item MSC/VLR\\
-\item SMSC\\
-\item EIR\\
-\item HLR/AUC\\
-\end{itemize}
+Der Basisstation-Controller (Base Station Controller, BSC) stellt hierbei die Gegenstelle dar und ist ebenso im OsmocomBB-Projekt enthalten. 
+
 
 
 
@@ -25,6 +29,7 @@ Bei OsmoNITB handelt es sich um ein freies Softwarepacket aus dem Osmocom-Baseba
 
 
 
+Weiterhin existieren noch folgende weitere Bestandteile, wie MSC/VLR, SMSC, EIR und HLR/AUC, die im nächsten Kapitel erklärt werden.
 
 
 
