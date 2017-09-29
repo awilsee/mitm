@@ -1,5 +1,5 @@
 \section{Umsetzung des Projektziels}\label{umsetzungProjekt}
-Während es sich bei den beiden vorherigen Kapiteln um die Inbetriebnahme des GSM-Netzes selbst gehandelt haben, geht es nun um die konkrete Umsetzung des eigentlichen Projektziels "Man-In-The-Middle". Dabei wird versucht die Gesprächsdaten auf der Strecke zwischen BTS, BSC und der Telefonvermittlungsanlage abzugreifen und zu speichern. Da alle Systeme softwareseitig auf einem PC ausgeführt werden und diese über Sockets miteinander kommunizieren, können die Daten überall abgegriffen werden.\\
+Dieses Kapitel behandelt nun die konkrete Umsetzung des eigentlichen Projektziels "Man-In-The-Middle". Der Ansatz besteht darin die Gesprächsdaten auf der Strecke zwischen BTS, BSC und der Telefonvermittlungsanlage abzugreifen und zu speichern. Da alle Systeme softwareseitig auf einem PC ausgeführt werden und diese über Sockets miteinander kommunizieren, können die Daten überall abgegriffen werden.\\
 
 Zuerst versucht zwischen BTS und BSC?!?
 -> evtl Screenshot von Daten des ABIS-Interface?!
@@ -18,9 +18,9 @@ Für die Installation und Einrichtung der benötigten Tools wurde ein Bash-Skrip
 
 
 \subsection{Abspeichern der Daten}\label{abspeichern}
-Mit Wireshark oder den beiden Komandozeilenanwendungen tshark und tcpdump können Daten von einem Interface in eine pcap-Datei abgespeichert werden. Hierbei können auch bereits beim Aufnehmen Filter gesetzt werden, sodass nur die relevanten Daten gespeichert werden.\\
+Mit Wireshark oder den beiden Komandozeilenanwendungen tshark und tcpdump können Daten von einem Interface in eine pcap-Datei abgespeichert werden. Hierbei können bereits beim Aufnehmen Filter gesetzt werden, sodass nur die relevanten Daten gespeichert werden.\\
 
-Pcapsipdump ist ein open-source Tool, welches auf der libpcap basiert. Das Tool hört auf einem Interface den Netzwerkverkehr mit und speichert die SIP/RTP sessions als pcap-Datei ab. Diese Datei kann nun in tcpdump, Wireshark oder ähnlichem geöffnet, eingelesen und weiterverarbeitet werden. Das nette Feature dabei ist, dass das Tool pro Session selbstständig eine Datei anlegt. Das Tool läuft als Hintergrundprozess, sodass es nur einmal manuell gestartet werden muss. Alternativ kann das Tool auch mit dem systemd-Init-Prozess automatisch gestartet werden, sofern man es nachträglich selbst konfiguriert. Da die Tools für das GSM-Netz, wie bereits erwähnt, alle auf dem selben Rechner laufen, reicht es das Loopback-Interface abzuhören.\\
+Pcapsipdump ist ein open-source Tool, welches auf der \textit{libpcap} basiert. Das Tool hört auf einem Interface den Netzwerkverkehr mit und speichert die SIP/RTP sessions als pcap-Datei ab. Diese Datei kann nun in tcpdump, Wireshark oder ähnlichem geöffnet, eingelesen und weiterverarbeitet werden. Eine hilfreiche Eigenschaft von pcapsipdump ist, dass das Tool pro Session selbstständig eine Datei anlegt. Das Tool läuft als Hintergrundprozess, sodass es nur einmal manuell gestartet werden muss. Alternativ kann pcapsipdump auch mit dem systemd-Init-Prozess automatisch gestartet werden, sofern man es nachträglich selbst konfiguriert. Da die Tools für das GSM-Netz, wie bereits erwähnt, alle auf demselben Rechner laufen, reicht es das Loopback-Interface abzuhören.\\
 
 Vor der Installation des Programmes selbst muss Subversion und folgende Abhängigkeit installiert werden.
 \begin{lstlisting}
@@ -41,38 +41,39 @@ sudo pcapsipdump -i lo -v 10 -d /home/all/wiresharkCalls/%Y%m%d-%H%M%S-%f-%t-%i.
 \end{lstlisting}
 
 \subsection{Extrahieren und konvertieren der Daten}\label{extractData}
-Zunächst wurden die von pcapsipdump extrahierten Daten mit Wireshark manuell analysiert. Darin sind nun nur noch die SIP- und RTP-Packet enthalten, wie auf fig XXXXX zu sehen. Mit Wireshark erkennt auch den VOIP-Anruf und kombiniert die RTP-Packages korrekt. Allerdings konnte der Stream nicht direkt im Programm abgespielt werden. Der Grund hierfür ist vermutlich, dass Wireshark gsm nicht dekodieren kann.
-Jedoch gibt es einen Weg, wie die beiden Streams als .raw-Daten exportiert werden können. Hierfür ein beliebiges RTP-Packet auswählen, über "Telefonie->RTP->Stream Analyse" den Stream analysieren. Nun kann der Hinweg und Rückweg als seperate Datei gespeichert werden. Man muss jedoch als Datei-Typ .raw auswählen.
+Zunächst wurden die von pcapsipdump extrahierten Daten mit Wireshark manuell analysiert. Darin sind nun nur noch die SIP- und RTP-Packet enthalten, wie auf fig XXXXX zu sehen. Wireshark erkennt den VOIP-Anruf und kombiniert die RTP-Packages korrekt. Allerdings konnte der Stream nicht direkt im Programm abgespielt werden. Der Grund hierfür ist, dass Wireshark gsm nicht dekodieren kann.
+Jedoch gibt es einen Weg, wie die beiden Streams als .raw-Daten exportiert werden können. Hierfür wird ein beliebiges RTP-Packet ausgewählt. Über die Menüoption \textit{Telefonie->RTP->Stream Analyse} kann der Stream analysiert werden. Nun kann der Hinweg und Rückweg als seperate Datei gespeichert werden. Man muss jedoch als Datei-Typ .raw auswählen.
 
-Die .raw-Dateien können nun via folgendem Komandozeilenaufruf abgespielt werden
+Die .raw-Dateien können nun via folgendem Komandozeilenaufruf abgespielt werden.
 \begin{lstlisting}
 padsp play -t gsm -r 8000 -c 1 example.gsm
 \end{lstlisting}
 
-Mit dem universellen und sehr mächtigen Audiokonverter SoX können die Dateien in .wav convertiert werden, sodass diese auch mit jedem herkömmlichen Media Player abgespielt werden können.
+Mit dem universellen Audiokonverter SoX können die Dateien in .wav convertiert werden, sodass diese auch mit jedem herkömmlichen Media Player abgespielt werden können.
 \begin{lstlisting}
 sox -t gsm -r 8000 -c 1 example.raw exampleConverted.wav
 \end{lstlisting}
 
-Mit dem Bash-Skript pcap2wav von https://gist.github.com/avimar/d2e9d05e082ce273962d742eb9acac16 können genau diese Schritte automatisiert ausgeführt werden.
+Mit dem Bash-Skript pcap2wav von Git \url{https://gist.github.com/avimar/d2e9d05e}\
+\url{082ce273962d742eb9acac16} können genau diese Schritte automatisiert durchgeführt werden.
 
 
 \subsection{Automatisierung}\label{automatisierung}
 
-Das Abspeichern der Daten funktioniert bereits voll automatisiert und jeweils auch in eine extra Datei pro Session. Allerdings sollte das Konvertierungs-Skript noch automatisch getriggert bzw. ausgeführt werden. Hierfür kann das Linux-Tool \textit{Incron} genutzt werden. Das Tool setzt auf das Kernel-Subsystem Inotify, um auf Dateisystem-Ereignisse zu reagieren. Dadurch kann ein Ordner überwacht werden und zum Beispiel beim erstellen einer neuen Datei etwas getriggert werden, wie eben die Ausführung des Konvertierungs-Skriptes. Incron ähnelt dabei in der Handhabung an das Standardwerkzeug \textit{Cron}, welches Cron Jobs auf Basis von Zeitpunkten startet.
+Das Abspeichern der Daten funktioniert bereits voll automatisiert und jeweils in eine extra Datei pro Session. Allerdings sollte das Konvertierungs-Skript noch automatisch ausgeführt werden. Hierfür kann das Linux-Tool \textit{Incron} genutzt werden. Das Tool setzt auf das Kernel-Subsystem Inotify, um auf Dateisystem-Ereignisse zu reagieren. Dadurch kann ein Ordner überwacht werden und beim Erstellen einer neuen Datei die Ausführung des Konvertierungs-Skriptes getriggert werden. Incron ähnelt dabei in der Handhabung an das Standardwerkzeug \textit{Cron}, welches Cron Jobs auf Basis von Zeitpunkten startet.
 
 
 \begin{lstlisting}
 sudo apt-get install -y incron
 \end{lstlisting}
 
-Damit das Programm gestartet und konfiguriert werden kann, muss in die Datei \textit{/etc/incron.allow} der Username eingetragen werden. Danach kann der Service gestartet werden.
+Damit das Programm gestartet und konfiguriert werden kann, muss in der Datei \textit{/etc/incron.allow} der Username eingetragen werden. Danach kann der Service gestartet werden.
 
 \begin{lstlisting}
 systemctl start incron.service
 \end{lstlisting}
 
-Pinzipiell gleich wie bei \textit{Cron} werden über \textit{incrontab -e} die Jobs angelegt und verwaltet.
+Analog zu \textit{Cron} werden über \textit{incrontab -e} die Jobs angelegt und verwaltet.
 \begin{lstlisting}
 /home/all/wiresharkCalls IN_CLOSE_WRITE /home/all/startPcap2wavgsmConversion.sh $@ $#
 \end{lstlisting}
@@ -86,9 +87,9 @@ Pinzipiell gleich wie bei \textit{Cron} werden über \textit{incrontab -e} die J
 \end{figure}
 
 
-Der Eintrag besteht aus dem Pfad, des zu beobachtenden Verzeichnisses, dem auftretendem Ereignis und zuletzt den auszuführenden Befehl beziehungsweise Skript. Über den Parameter \textit{\$@}  wird das beobachtete Verzeichnis und mit \textit{\$\#} den Namen der Datei, welches das Ereignis getriggert hat, übergeben. Damit das Konvertierungs-Skript von \ref{extractData} erst ausgeführt wird, wenn alle Daten geschrieben worden sind, wurde das Ereignis \textit{IN\_CLOSE\_WRITE} genutzt, wie in Abbildung \ref{fig:incrontab} zu sehen. Das Skript wird nun getriggert, sobald die Datei vom Schreiben geschlossen wurde.\\
+Der Eintrag besteht aus dem Pfad, dem zu beobachtenden Verzeichnis, dem auftretendem Ereignis und zuletzt dem auszuführenden Befehl beziehungsweise Skript. Über den Parameter \textit{\$@}  wird das beobachtete Verzeichnis und mit \textit{\$\#} der Name der Datei, welches das Ereignis getriggert hat, übergeben. Das Konvertierungs-Skript von \ref{extractData} soll ausschließlich nach der Erstellung der Datei ausgeführt werden. Dazu wurde das Ereignis \textit{IN\_CLOSE\_WRITE} genutzt, das in Abbildung \ref{fig:incrontab} zu sehen ist. Sobald die Datei vollständig erstellt und geschlossen wurde, wird das auszuführende Skript getriggert.\\
 
-Über den Status kann überprüft werden ob ein Ereignis ausgelöst und der Befehl getriggert wurde.
+Über den Status kann überprüft werden, ob ein Ereignis ausgelöst und der Befehl getriggert wurde.
 
 \begin{lstlisting}
 systemctl status incron.service
