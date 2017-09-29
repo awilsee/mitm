@@ -88,7 +88,7 @@ Device Address:
 OsmocomBB hält detaillierte Beschreibungen zur Installation der GSM Komponenten bereit, welche zur Inbetriebnahme des in Rahmen dieser Arbeit verwendeten GSM Netzes herangezogen wurden. Im Folgenden wird die Installation und Einrichtung der GSM Komponenten genauer erläutert. 
 
 \subsubsection{OsmoTRX}
-Zur Kommunikation mit der Basisstation ist der osmoTRX Transceiver nötig. Osmocom bietet diesen - meist wie die anderen Komponenten - im Git Repository an. Die Installation des Transceiver erforderte die Bibliotheken \textit{$libusb-1.0-0-dev$, $uhd-host$, $libboost-dev$} und \textit{$libuhd-dev$}. Diese bieten die Suchfunktion \textit{uhd\_find\_devices}. Dadurch lässt sich testen, ob die Basisstation gefunden wird. Mittels \textit{osmo-trx} lässt sich der Transceiver nach der Installation starten.
+Zur Kommunikation mit der Basisstation ist der osmoTRX Transceiver nötig. Osmocom bietet diesen - meist wie die anderen Komponenten - im Git Repository an. Die Installation des Transceiver erforderte die Bibliotheken \textit{$libusb-1.0-0-dev$, $uhd-host$, $libboost-dev$} und \textit{$libuhd-dev$}. Diese bieten die Suchfunktion \textit{uhd\_find\_devices}. Dadurch lässt sich testen, ob die Basisstation gefunden wird. Mittels \textit{osmo-trx -f} lässt sich der Transceiver nach der Installation starten.
 
 \begin{lstlisting}
 git clone git://git.osmocom.org/osmo-trx
@@ -97,7 +97,7 @@ autoreconf -i
 ./configure
 sudo make -j8
 sudo make install
-osmo-trx	
+osmo-trx -f
 \end{lstlisting}
 
 \begin{figure}[h] %t=top b=bottom h=here p =eigene page
@@ -199,13 +199,9 @@ OsmoBTS wurde wie folgt gestartet.
 cd /home/netpc06/osmo-bts/src/osmo-bts-trx
 sudo osmo-bts-trx -c osmo-bts.cfg
 \end{lstlisting}
-
-\begin{figure}[h] %t=top b=bottom h=here p =eigene page
-\centering
-\includegraphics[width=15cm]{includes/Start_OsmoBTS}
-\caption{Ansicht der Konsole nach dem Start der OsmoBTS}
-\label{fig:OsmoBTS}
-\end{figure}
+   \vspace{2mm}
+   
+Konsolenausgabe siehe Anhang \ref{startOsmoBTS}.
 
 
 \subsection{Installation weiterer Komponenten}
@@ -223,11 +219,24 @@ make
 sudo make install
 \end{lstlisting} 
 
+Das Konfigurationsdatei beinhalten lediglich folgendes.
+
+\begin{lstlisting}
+app
+mncc
+  socket-path /tmp/bsc_mncc
+sip
+  local 127.0.0.1 5069
+  remote 127.0.0.1 5060
+\end{lstlisting}
+
 Nach erfolgreicher Installation wurde der Osmo-sip-connectors mit Angabe der Konfigurationsdatei gestartet.
 
 \begin{lstlisting}
 osmo-sip-connector -c ./osmo-sip-connector.cfg
 \end{lstlisting} 
+
+Zusätzlich muss nun beim Start von Osmo-Nitb der Parameter \textit{\-M \/tmp\/bsc\_mncc} mit angehängt werden, sodass der Osmo-sip-Connector die Daten empfangen und konvertieren kann.
 
 \begin{figure}[h] %t=top b=bottom h=here p =eigene page
 \centering
@@ -241,6 +250,28 @@ Den Aufbau von Gesprächen sowie deren Vermittlung wurde in dieser Arbeit der PB
 
 \begin{lstlisting}
 sudo apt-get install asterisk
+\end{lstlisting}
+
+Um Asterisk mit dem Osmo-sip-Connector zu verbinden muss die \textit{sip.conf} im Verzeichnis \textit{/etc/asterisk} erweitert werden.
+
+\begin{lstlisting}
+[GSM]
+type=friend
+host=127.0.0.1
+dtmfmode=rfc2833
+canreinvite=no
+disallow=all
+allow=gsm
+context=gsmsubscriber
+port=5069
+\end{lstlisting}
+
+Des Weiteren die \textit{extensions.conf} im selben Verzeichnis erweitern.
+\begin{lstlisting}
+[gsmsubscriber]
+exten=>_XXXXX,1,Dial(SIP/GSM/\${EXTEN})
+exten=>_XXXXX,n,Playback(vm-nobodyavail)
+exten=>_XXXXX,n,HangUp
 \end{lstlisting}
 
 Nach der Installation startet Asterisk selbständig. Da mehrmals Änderungen an den Konfigurationsdateien von Asterisk vorgenommen wurden, wurde Asterisk mehrmals neu gestartet.

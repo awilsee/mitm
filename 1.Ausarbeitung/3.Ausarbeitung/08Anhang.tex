@@ -1,3 +1,51 @@
+\section{osmo-bts.cfg}\label{Osmo-bts.cfg}
+\begin{lstlisting}
+!
+! OsmoBTS () configuration saved from vty
+!!
+!
+log stderr
+  logging color 1
+  logging timestamp 0
+  logging level rsl info
+  logging level oml info
+  logging level rll notice
+  logging level rr notice
+  logging level meas notice
+  logging level pag info
+  logging level l1c info
+  logging level l1p info
+  logging level dsp info
+  logging level abis notice
+!
+line vty
+ no login
+!
+phy 0
+ instance 0
+ osmotrx rx-gain 1
+ osmotrx ip local 127.0.0.1
+ osmotrx ip remote 127.0.0.1
+bts 0
+ band PCS1900
+ ipa unit-id 1901 0
+ oml remote-ip 127.0.0.1
+ paging lifetime 0
+ gsmtap-sapi bcch
+ gsmtap-sapi ccch
+ gsmtap-sapi rach
+ gsmtap-sapi agch
+ gsmtap-sapi pch
+ gsmtap-sapi sdcch
+ gsmtap-sapi pacch
+ gsmtap-sapi pdtch
+ gsmtap-sapi sacch
+ trx 0
+  phy 0 instance 0
+\end{lstlisting}
+
+
+\newpage
 \section{openbsc.cfg} \label{Openbsc.cfg}
 \begin{lstlisting}
 !
@@ -88,63 +136,16 @@ network
 \end{lstlisting}
 
 \newpage
-\section{osmo-bts.cfg}\label{Osmo-bts.cfg}
-\begin{lstlisting}
-!
-! OsmoBTS () configuration saved from vty
-!!
-!
-log stderr
-  logging color 1
-  logging timestamp 0
-  logging level rsl info
-  logging level oml info
-  logging level rll notice
-  logging level rr notice
-  logging level meas notice
-  logging level pag info
-  logging level l1c info
-  logging level l1p info
-  logging level dsp info
-  logging level abis notice
-!
-line vty
- no login
-!
-phy 0
- instance 0
- osmotrx rx-gain 1
- osmotrx ip local 127.0.0.1
- osmotrx ip remote 127.0.0.1
-bts 0
- band PCS1900
- ipa unit-id 1901 0
- oml remote-ip 127.0.0.1
- paging lifetime 0
- gsmtap-sapi bcch
- gsmtap-sapi ccch
- gsmtap-sapi rach
- gsmtap-sapi agch
- gsmtap-sapi pch
- gsmtap-sapi sdcch
- gsmtap-sapi pacch
- gsmtap-sapi pdtch
- gsmtap-sapi sacch
- trx 0
-  phy 0 instance 0
-\end{lstlisting}
+\section{Starten von OsmoBTS}\label{startOsmoBTS}
+\begin{figure}[h] %t=top b=bottom h=here p =eigene page
+\centering
+\includegraphics[width=15cm]{includes/Start_OsmoBTS}
+\caption{Ansicht der Konsole nach dem Start der OsmoBTS}
+\label{fig:OsmoBTS}
+\end{figure}
 
 \newpage
-\section{Installations- und Konfigurations-Skript} \label{configureScript}
-\lstinputlisting{../../4.Projektziel-Umsetzung/configureRecord.sh}
-
-
-
-
-
-
-
-\section{Quellcode der GUI-Anwendung}
+\section{Quellcode der GUI-Anwendung}\label{quellcodeGUI}
 
 \textbf{Inhalt von main.cpp}
 
@@ -389,365 +390,10 @@ void MitM::slot5Pressed(){
 \end{lstlisting}
 
 
-\vspace{2cm}
-\textbf{Inhalt von mitm.ui}
-
-\begin{lstlisting}
-<?xml version="1.0" encoding="UTF-8"?>
-<ui version="4.0">
- <class>MitM</class>
- <widget class="QMainWindow" name="MitM">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>648</width>
-    <height>330</height>
-   </rect>
-  </property>
-  <property name="windowTitle">
-   <string>MitM</string>
-  </property>
-  <widget class="QWidget" name="centralWidget">
-   <widget class="QGroupBox" name="groupBox">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>341</width>
-      <height>311</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>GSM-Netz erzeugen</string>
-    </property>
-    <widget class="QLabel" name="label">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>40</y>
-       <width>171</width>
-       <height>17</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Administratorpasswort:</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButtonWireshark">
-     <property name="geometry">
-      <rect>
-       <x>230</x>
-       <y>230</y>
-       <width>99</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Starten</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_4">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>160</y>
-       <width>81</width>
-       <height>17</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>OsmoBTS:</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_6">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>240</y>
-       <width>91</width>
-       <height>17</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Wireshark:</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_2">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>80</y>
-       <width>111</width>
-       <height>17</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Transceiver:</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_3">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>120</y>
-       <width>91</width>
-       <height>17</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>OsmoBSC:</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButtonSipConnector">
-     <property name="geometry">
-      <rect>
-       <x>230</x>
-       <y>190</y>
-       <width>99</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Starten</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButtonSQLBrowser">
-     <property name="geometry">
-      <rect>
-       <x>230</x>
-       <y>270</y>
-       <width>99</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Starten</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="lineEdit">
-     <property name="geometry">
-      <rect>
-       <x>230</x>
-       <y>30</y>
-       <width>101</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="echoMode">
-      <enum>QLineEdit::Password</enum>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButtonTransceiver">
-     <property name="geometry">
-      <rect>
-       <x>230</x>
-       <y>70</y>
-       <width>99</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Starten</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_5">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>200</y>
-       <width>111</width>
-       <height>17</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Sip-Connector:</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButtonBTS">
-     <property name="geometry">
-      <rect>
-       <x>230</x>
-       <y>150</y>
-       <width>99</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Starten</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButtonBSC">
-     <property name="geometry">
-      <rect>
-       <x>230</x>
-       <y>110</y>
-       <width>99</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Starten</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_7">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>270</y>
-       <width>121</width>
-       <height>17</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>SQLiteBrowser:</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGroupBox" name="groupBox_2">
-    <property name="geometry">
-     <rect>
-      <x>360</x>
-      <y>10</y>
-      <width>281</width>
-      <height>311</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>Gesprach ausspahen</string>
-    </property>
-    <widget class="QLabel" name="label_8">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>40</y>
-       <width>111</width>
-       <height>17</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>PcapSipDump:</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButtonPcap">
-     <property name="geometry">
-      <rect>
-       <x>170</x>
-       <y>40</y>
-       <width>89</width>
-       <height>25</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Starten</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButtonSlot1">
-     <property name="geometry">
-      <rect>
-       <x>170</x>
-       <y>110</y>
-       <width>89</width>
-       <height>25</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Slot 1</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButtonSlot2">
-     <property name="geometry">
-      <rect>
-       <x>170</x>
-       <y>150</y>
-       <width>89</width>
-       <height>25</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Slot 2</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButtonSlot3">
-     <property name="geometry">
-      <rect>
-       <x>170</x>
-       <y>190</y>
-       <width>89</width>
-       <height>25</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Slot 3</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButtonSlot4">
-     <property name="geometry">
-      <rect>
-       <x>170</x>
-       <y>230</y>
-       <width>89</width>
-       <height>25</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Slot 4</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButtonSlot5">
-     <property name="geometry">
-      <rect>
-       <x>170</x>
-       <y>270</y>
-       <width>89</width>
-       <height>25</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Slot 5</string>
-     </property>
-    </widget>
-   </widget>
-  </widget>
- </widget>
- <layoutdefault spacing="6" margin="11"/>
- <resources/>
- <connections/>
-</ui>
-\end{lstlisting}
-
-
-
-
+\newpage
+\section{Installations- und Konfigurations-Skript} \label{configureScript}
+\lstinputlisting{../../4.Projektziel-Umsetzung/configureRecord.sh}
 
 \newpage
-
-\section{Starten von OpenBTS}
-
-\begin{figure}[h] %t=top b=bottom h=here p =eigene page
-\centering
-\includegraphics[width=15cm]{includes/Start_OsmoBTS}
-\caption{Ansicht der Konsole nach dem Start der OsmoBTS}
-\label{fig:OsmoBTS}
-\end{figure}
+ \section{Skript zum Starten der Konvertierung} \label{startingConvertScript}
+ \lstinputlisting{../../4.Projektziel-Umsetzung/startPcap2wavgsmConversion.sh}
