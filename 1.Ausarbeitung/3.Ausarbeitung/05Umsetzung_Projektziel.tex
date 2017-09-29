@@ -34,7 +34,7 @@ Jedoch gibt es einen Weg, wie die beiden Streams als .raw-Daten exportiert werde
 \begin{figure}[h] %t=top b=bottom h=here p =eigene page
 \centering
 \includegraphics[width=15cm]{includes/w_SIPRTP}
-\caption{Extrahierte SIP\- \& RTP\-Pakete}
+\caption{Extrahierte SIP- \& RTP-Pakete}
 \label{fig:wSipRTP}
 \end{figure}
 
@@ -99,7 +99,7 @@ Durch Änderungen und Erweiterungen in der der Konfigurationsdatei "extensions.c
 
 Da Asterisk kein .wav im GSM-Netz unterstützt, musste das Gepräch zusätzlich in .gsm konvertiert werden. Aus diesem Grund wurde das orignal Skript von \ref{extractData} angepasst, sodass mit diesem beide Konvertierungen möglich waren.\\
 
-Die Realisierung hierfür unterscheidet sich jedoch stark von dem verwendeten Architekturansatz. Dies liegt an den unterschiedlichen Asterisk-Versionen, die verwendet wurden. Ein Tausch beider Konfigurationen schlug fehl. Nachfolgend sind beide Ansätze aufgelistet:
+Die Realisierung hierfür unterscheidet sich jedoch stark von dem verwendeten Architekturansatz. Dies liegt an den unterschiedlichen Asterisk-Versionen, die verwendet wurden. Ein Tausch beider Konfigurationen schlug fehl. Nachfolgend sind beide Ansätze aufgelistet:\\
 
 
 
@@ -138,7 +138,7 @@ exten=>_XXXXX,n,HangUp
 \end{lstlisting}
 
 Insgesamt sind fünf Rufnummern (000001 - 000005) hinterlegt, sodass die letzten fünf Telefonate angehört werden können. Sie repräsentieren jeweils ein Mobiltelefon, das mit einer dieser Nummern verknüpft wurde. Diese Verknüpfung wird in der Datei "slots" hergestellt. Hier wird die IMSI einer Nummer zugeordnet. 
-Nach Aufzeichnen eines Telefongesprächs und erneutem Anruf wird die erzeugte .gsm/wav Datei, des jeweiligen Slots überschrieben.
+Nach Aufzeichnen eines Telefongesprächs und erneutem Anruf wird die erzeugte .gsm/wav Datei, des jeweiligen Slots überschrieben.\\
 
 
 
@@ -205,34 +205,7 @@ In diesem Ansatz wurde die IMSI eines Mobilgeräts direkt hinterlegt, sodass nur
 
 
 \subsection{Aufgetretene Probleme}
-
-Ein Problem war, dass wir bei der Aufnahme der Daten zunächst nur UDP-Datenströme in Wireshark beobachten konnten. Die benötigten SIP-Daten waren nicht sichtbar. Dies konnten wir lösen, indem wir in Wireshark das Protokoll rtp\_udp aktivierten. Anschließend wurden die UDP-Daten als SIP-Daten dargestellt.
-
- -> Streams reichen nicht aus? (um alles automatisieren?!?) -> Installation von Sip-Connector\\
-
-
-
-Konfigurationsprobleme -> Config Files bei einem System funktionieren auf dem eig. gleichen System auf einmal nicht mehr\\
-
-
-
-Ein weiteres Problem ist, dass mit der OsmocomBB-Software es gelegentlich zu Verzögerungen beim Auflegen gab. Dies zeigte sich, indem es manchmal bis zu zehn Sekunden dauern konnte, ehe der Anruf aus der Mobiltelefonanzeige verschwand. Außerdem traten abhängig vom Mobiltelefon auch Störgeräusche auf.
-
-
-
-Zuerst versucht zwischen BTS und BSC?!?
--> evtl Screenshot von Daten des ABIS-Interface?!
-https://osmocom.org/projects/osmo-sip-conector/wiki/Osmo-sip-connector
-
-http://ftp.osmocom.org/docs/latest/osmonitb-usermanual.pdf -> p.6/7 \\
-
-Abgreifen der Daten zwischen BTS und BSC (ABIS-Interface) schwierig -> Daten weiter analysiert und weitere Angriffspunkte ausmachen.
--> Abgreifen der Daten vor der Telefonanlage (Asterisk (OPEN: IAX; Osmo: PBX)) -> dadurch die Daten im VOIP Format (SIP + RTP), welches via PC relativ gut zu handeln ist. \\
-
-Zunächst eigenes analysieren der Daten. Suche nach pratkischem Tool im Internet
--> pcapsipdump\\
-
-
+Vor der Installation des Osmo-sip-Connectors gab es zunächst Probleme beim Analysieren der Wireshark Daten, da die eigentlichen RTP-Pakete als UDP-Pakete erkannt wurden. Durch eine Einstellung in Wireshark lässt sich dies jedoch behoben. Dazu muss unter der Menüoption \textit{Analyse->Protokolle aktivieren...} das Protokoll \textit{rtp\_udp} aktiviert werden. Nach neu laden des Files oder starten einer neuen Aufnahme werden die UDP-Pakete als RTP-Pakete erkannt. Allerdings haben nach wie vor die SIP-Pakete gefehlt, was wie beschrieben durch den Osmo-sip-Connector gelöst wurde.\\
 
 
 Mit dem Tool in \ref{extractData}, welches für das Abspeichern der Daten zuständig ist, gab es Probleme. Denn es wurde kein Datei-Ereignis beziehungsweise erst nach sehr langer Verzögerung erkannt. Nach Lesen und Debuggen des Source-Codes, stellte sich heraus, dass das Tool die erstellte Datei sehr lange nicht schließt, obwohl bereits seit längerem die Session beendet ist. Der Übeltäter war ein Timer in der calltable-Klasse, welcher auf 5 Minute gestellt war. Nach Verändern des Source-Codes und Anpassen des Timers auf 5 Sekunden wurde auch die erstellte pcap-Datei kurz nach Ende der Session geschlossen und das Incron-Ereignis zum Start der Konvertierung getriggert.
