@@ -92,23 +92,131 @@ systemctl status incron.service
 
 Nun werden also die Daten direkt von der Schnittstelle abgegriffen, gefiltert und gespeichert. Danach automatisch in .wav konvertiert, sodass die Gespräche lokal auf dem PC angehört werden können. Damit wäre das Projektziel bereits erreicht beziehungsweise mit der Konvertierung auch praktisch erweitert. Um nicht an den lokalen PC gebunden zu sein, wäre es nun auch möglich die Dateien über einen Webserver global zur Verfügung zu stellen.
 
+
 \subsection{Feature - Abhören der Aufnahme}
-Es soll das letzte oder die letzten Gespräche via einem Telefonanruf wiedergegeben werden können. Dies wurde mit einer/mehreren speziell konfigurierten Nummern ermöglicht.
+Es soll das letzte oder die letzten Gespräche via einem Telefonanruf wiedergegeben werden können. Dies wurde zuerst mit einer, anschließend für mehrere speziell konfigurierte Nummern ermöglicht. 
+Durch Änderungen und Erweiterungen in der der Konfigurationsdatei "extensions.conf" von Asterisk konnte jeweils eine Rufnummer hinterlegt werden, unter der ein Gespräch bereitgestellt wird. Das Abspielen einer Datei erfolgt durch die Methode \textit{Playback}.\\
 
--> aktuelle extensions.conf ziehen
+Da Asterisk kein .wav im GSM-Netz unterstützt, musste das Gepräch zusätzlich in .gsm konvertiert werden. Aus diesem Grund wurde das orignal Skript von \ref{extractData} angepasst, sodass mit diesem beide Konvertierungen möglich waren.\\
+
+Die Realisierung hierfür unterscheidet sich jedoch stark von dem verwendeten Architekturansatz. Dies liegt an den unterschiedlichen Asterisk-Versionen, die verwendet wurden. Ein Tausch beider Konfigurationen schlug fehl. Nachfolgend sind beide Ansätze aufgelistet:
 
 
 
-Durch Änderungen und Erweiterungen der Konfigurationsdatei extensions.conf von Asterisk konnte eine Rufnummer hinterlegt werden. Das Abspielen der .gsm Datei erfolgt durch die Methode \textit{Playback}. Nach Aufzeichnen eines Telefongesprächs und erneutem Anruf wurde die erzeugte .wav Datei überschrieben. Dies hatte zur Folge, dass nur das letzte Telefonat abgehört werden konnte. Aus diesem Grund wurde das Feature um zusätzliche Slots erweitert. Insgesamt sind fünf Rufnummern hinterlegt, sodass die letzten fünf Telefonate angehört werden können. 
+
+\textbf{Konfigurationsdatei für OsmoNITB-Ansatz}
+
+\begin{lstlisting}
+[gsmsubscriber]
+exten=> 000001,1,Progress()
+exten=> 000001,n,Wait(1)
+exten=> 000001,n,Playback(/home/all/gsmCalls/recordedCall1.gsm_mixed)
+exten=> 000001,n,Hangup()
+
+exten=> 000002,1,Progress()
+exten=> 000002,n,Wait(1)
+exten=> 000002,n,Playback(/home/all/gsmCalls/recordedCall2.gsm_mixed)
+exten=> 000002,n,Hangup()
+
+exten=> 000003,1,Progress()
+exten=> 000003,n,Wait(1)
+exten=> 000003,n,Playback(/home/all/gsmCalls/recordedCall3.gsm_mixed)
+exten=> 000003,n,Hangup()
+
+exten=> 000004,1,Progress()
+exten=> 000004,n,Wait(1)
+exten=> 000004,n,Playback(/home/all/gsmCalls/recordedCall4.gsm_mixed)
+exten=> 000004,n,Hangup()
+
+exten=> 000005,1,Progress()
+exten=> 000005,n,Wait(1)
+exten=> 000005,n,Playback(/home/all/gsmCalls/recordedCall5.gsm_mixed)
+exten=> 000005,n,Hangup()
+
+exten=>_XXXXX,1,Dial(SIP/GSM/${EXTEN})
+exten=>_XXXXX,n,HangUp
+\end{lstlisting}
+
+Insgesamt sind fünf Rufnummern (000001 - 000005) hinterlegt, sodass die letzten fünf Telefonate angehört werden können. Sie repräsentieren jeweils ein Mobiltelefon, das mit einer dieser Nummern verknüpft wurde. Diese Verknüpfung wird in der Datei "slots" hergestellt. Hier wird die IMSI einer Nummer zugeordnet. 
+Nach Aufzeichnen eines Telefongesprächs und erneutem Anruf wird die erzeugte .gsm/wav Datei, des jeweiligen Slots überschrieben.
+
+
+
+\textbf{Konfigurationsdatei für OpenBTS-Ansatz}
+
+\begin{lstlisting}
+[default](+)
+exten => 000001,	1,Set(CDR(hangupdirection)=A)
+same =>			n,Answer()
+same =>			n,GotoIf($["${CDR(A-IMSI)}"!="IMSI010100000000006"]?BUSY)
+same =>			n,Playback(/home/all/gsmCalls/recordedCall1.gsm_mixed)
+same =>			n,Set(CDR(hangupdirection)=SYSTEM)
+same =>			n,Hangup(16)
+
+same =>			n(BUSY,Set(CDR(hangupdirection)=SYSTEM)
+same =>			n,Busy(5)
+
+exten => 000002,	1,Set(CDR(hangupdirection)=A)
+same =>			n,Answer()
+same =>			n,GotoIf($["${CDR(A-IMSI)}"!="IMSI010100000000006"]?BUSY)
+same =>			n,Playback(/home/all/gsmCalls/recordedCall2.gsm_mixed)
+same =>			n,Set(CDR(hangupdirection)=SYSTEM)
+same =>			n,Hangup(16)
+
+same =>			n(BUSY,Set(CDR(hangupdirection)=SYSTEM)
+same =>			n,Busy(5)
+
+exten => 000003,	1,Set(CDR(hangupdirection)=A)
+same =>			n,Answer()
+same =>			n,GotoIf($["${CDR(A-IMSI)}"!="IMSI010100000000006"]?BUSY)
+same =>			n,Playback(/home/all/gsmCalls/recordedCall3.gsm_mixed)
+same =>			n,Set(CDR(hangupdirection)=SYSTEM)
+same =>			n,Hangup(16)
+
+same =>			n(BUSY,Set(CDR(hangupdirection)=SYSTEM)
+same =>			n,Busy(5)
+
+exten => 000004,	1,Set(CDR(hangupdirection)=A)
+same =>			n,Answer()
+same =>			n,GotoIf($["${CDR(A-IMSI)}"!="IMSI010100000000006"]?BUSY)
+same =>			n,Playback(/home/all/gsmCalls/recordedCall4.gsm_mixed)
+same =>			n,Set(CDR(hangupdirection)=SYSTEM)
+same =>			n,Hangup(16)
+
+same =>			n(BUSY,Set(CDR(hangupdirection)=SYSTEM)
+same =>			n,Busy(5)
+
+exten => 000005,	1,Set(CDR(hangupdirection)=A)
+same =>			n,Answer()
+same =>			n,GotoIf($["${CDR(A-IMSI)}"!="IMSI010100000000006"]?BUSY)
+same =>			n,Playback(/home/all/gsmCalls/recordedCall5.gsm_mixed)
+same =>			n,Set(CDR(hangupdirection)=SYSTEM)
+same =>			n,Hangup(16)
+
+same =>			n(BUSY,Set(CDR(hangupdirection)=SYSTEM)
+same =>			n,Busy(5)
+\end{lstlisting}
+
+In diesem Ansatz wurde die IMSI eines Mobilgeräts direkt hinterlegt, sodass nur dieser die Gespräche abhören kann. 
+
+
+
+
 
 
 \subsection{Aufgetretene Probleme}
 
-Aufnehmen der Daten -> zunächst nur UDP -> in Wireshark Protokoll rtp\_udp aktivieren -> Streams reichen nicht aus? (um alles automatisieren?!?) -> Installation von Sip-Connector\\
+Ein Problem war, dass wir bei der Aufnahme der Daten zunächst nur UDP-Datenströme in Wireshark beobachten konnten. Die benötigten SIP-Daten waren nicht sichtbar. Dies konnten wir lösen, indem wir in Wireshark das Protokoll rtp\_udp aktivierten. Anschließend wurden die UDP-Daten als SIP-Daten dargestellt.
+
+ -> Streams reichen nicht aus? (um alles automatisieren?!?) -> Installation von Sip-Connector\\
+
+
 
 Konfigurationsprobleme -> Config Files bei einem System funktionieren auf dem eig. gleichen System auf einmal nicht mehr\\
 
-Bei Osmocom treten allgemein manchmal Verzögerungen beim Auflagen sowie je nach Telefon auch Störgeräusche auf.\\
+
+
+Ein weiteres Problem ist, dass mit der OsmocomBB-Software es gelegentlich zu Verzögerungen beim Auflegen gab. Dies zeigte sich, indem es manchmal bis zu zehn Sekunden dauern konnte, ehe der Anruf aus der Mobiltelefonanzeige verschwand. Außerdem traten abhängig vom Mobiltelefon auch Störgeräusche auf.
 
 
 
